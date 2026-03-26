@@ -1,8 +1,7 @@
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import { ZONES, TOTAL_COLLECTIBLES } from './data.js';
-
-console.log(`Loaded ${ZONES.length} zones with ${TOTAL_COLLECTIBLES} collectibles`);
+import { buildGround, buildPath, buildSkyParticles, updateParticles } from './world.js';
 
 const canvas = document.getElementById('game-canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -12,9 +11,12 @@ renderer.setClearColor(0x0f172a);
 
 const scene = new THREE.Scene();
 
+// Fog for depth
+scene.fog = new THREE.FogExp2(0x0f172a, 0.012);
+
 // Isometric camera
 const aspect = window.innerWidth / window.innerHeight;
-const frustum = 20;
+const frustum = 14;
 const camera = new THREE.OrthographicCamera(
   -frustum * aspect, frustum * aspect,
   frustum, -frustum,
@@ -30,11 +32,10 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
 dirLight.position.set(10, 20, 10);
 scene.add(dirLight);
 
-// Test cube
-const geo = new THREE.BoxGeometry(2, 2, 2);
-const mat = new THREE.MeshLambertMaterial({ color: 0x4ade80 });
-const cube = new THREE.Mesh(geo, mat);
-scene.add(cube);
+// Build world
+buildGround(scene);
+buildPath(scene);
+const particles = buildSkyParticles(scene);
 
 // Resize
 window.addEventListener('resize', () => {
@@ -51,6 +52,10 @@ window.addEventListener('resize', () => {
 function animate(time) {
   requestAnimationFrame(animate);
   TWEEN.update(time);
+  updateParticles(particles, time);
   renderer.render(scene, camera);
 }
 animate();
+
+// Export for other modules
+export { scene, camera, renderer };
