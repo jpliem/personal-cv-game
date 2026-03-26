@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jonathan Putra — Career Journey</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <canvas id="game-canvas"></canvas>
+
+  <!-- HUD: Top-left logo + zone name -->
+  <div id="hud-top-left">
+    <div id="hud-logo">JONATHAN PUTRA</div>
+    <div id="hud-zone-name">BINUS — Campus</div>
+  </div>
+
+  <!-- HUD: Top-right collectible counter -->
+  <div id="hud-top-right">
+    <span id="hud-gem-icon">&#x1F48E;</span>
+    <span id="hud-counter">0 / 17 discovered</span>
+  </div>
+
+  <!-- HUD: Bottom nav bar -->
+  <div id="hud-bottom-nav">
+    <button id="nav-prev" class="nav-arrow">&larr;</button>
+    <div id="nav-zones">
+      <button class="nav-zone active" data-zone="0">BINUS</button>
+      <span class="nav-path-line"></span>
+      <button class="nav-zone" data-zone="1">BCA</button>
+      <span class="nav-path-line"></span>
+      <button class="nav-zone" data-zone="2">EY</button>
+      <span class="nav-path-line"></span>
+      <button class="nav-zone" data-zone="3">Blibli</button>
+      <span class="nav-path-line"></span>
+      <button class="nav-zone" data-zone="4">GSPE</button>
+    </div>
+    <button id="nav-next" class="nav-arrow">&rarr;</button>
+  </div>
+
+  <!-- HUD: Right stats panel -->
+  <button id="stats-toggle">&#9776; Stats</button>
+  <div id="stats-panel" class="hidden">
+    <div id="stats-player-card"></div>
+    <div id="stats-skills"></div>
+    <div id="stats-badges"></div>
+  </div>
+
+  <!-- Tooltip (positioned dynamically) -->
+  <div id="tooltip" class="hidden">
+    <div id="tooltip-text"></div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

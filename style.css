@@ -1,0 +1,312 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow: hidden;
+  background: #0f172a;
+  font-family: 'Press Start 2P', monospace;
+  color: #e2e8f0;
+}
+
+#game-canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* HUD shared */
+#hud-top-left,
+#hud-top-right,
+#hud-bottom-nav,
+#stats-toggle,
+#stats-panel,
+#tooltip {
+  position: fixed;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+/* Top-left */
+#hud-top-left {
+  top: 20px;
+  left: 20px;
+}
+
+#hud-logo {
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: #fbbf24;
+  text-shadow: 2px 2px 0 #0f172a;
+}
+
+#hud-zone-name {
+  font-size: 10px;
+  margin-top: 8px;
+  color: #94a3b8;
+}
+
+/* Top-right */
+#hud-top-right {
+  top: 20px;
+  right: 20px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#hud-gem-icon {
+  font-size: 18px;
+}
+
+/* Bottom nav */
+#hud-bottom-nav {
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15, 23, 42, 0.85);
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid #334155;
+}
+
+#nav-zones {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-zone {
+  background: #1e293b;
+  border: 2px solid #334155;
+  color: #94a3b8;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-zone:hover {
+  border-color: #fbbf24;
+  color: #fbbf24;
+}
+
+.nav-zone.active {
+  background: #fbbf24;
+  color: #0f172a;
+  border-color: #fbbf24;
+  transform: scale(1.1);
+}
+
+.nav-path-line {
+  width: 16px;
+  height: 2px;
+  background: #334155;
+  display: inline-block;
+}
+
+.nav-arrow {
+  background: none;
+  border: 2px solid #334155;
+  color: #94a3b8;
+  font-size: 16px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.nav-arrow:hover {
+  border-color: #fbbf24;
+  color: #fbbf24;
+}
+
+/* Stats panel */
+#stats-toggle {
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid #334155;
+  border-right: none;
+  color: #94a3b8;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  padding: 12px 8px;
+  border-radius: 8px 0 0 8px;
+  cursor: pointer;
+  writing-mode: vertical-rl;
+  letter-spacing: 2px;
+}
+
+#stats-panel {
+  top: 0;
+  right: 0;
+  width: 320px;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.95);
+  border-left: 1px solid #334155;
+  padding: 24px 20px;
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+}
+
+#stats-panel.hidden {
+  transform: translateX(100%);
+}
+
+/* Tooltip */
+#tooltip {
+  background: rgba(15, 23, 42, 0.95);
+  border: 2px solid #fbbf24;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 9px;
+  line-height: 1.6;
+  max-width: 260px;
+  pointer-events: none;
+}
+
+#tooltip.hidden {
+  display: none;
+}
+
+/* Stats panel content */
+.stats-section {
+  margin-bottom: 20px;
+}
+
+.stats-section h3 {
+  font-size: 10px;
+  color: #fbbf24;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 6px;
+}
+
+.player-info {
+  font-size: 8px;
+  line-height: 2;
+  color: #cbd5e1;
+}
+
+.player-info a {
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+.skill-group {
+  margin-bottom: 12px;
+}
+
+.skill-group-name {
+  font-size: 8px;
+  color: #e2e8f0;
+  margin-bottom: 6px;
+}
+
+.skill-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-size: 7px;
+}
+
+.skill-bar-name {
+  width: 80px;
+  color: #94a3b8;
+}
+
+.skill-bar-fill {
+  height: 8px;
+  border-radius: 4px;
+  flex: 1;
+  background: #1e293b;
+  overflow: hidden;
+}
+
+.skill-bar-fill-inner {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.badge {
+  display: inline-block;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 7px;
+  margin: 3px;
+  color: #cbd5e1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #hud-logo {
+    font-size: 12px;
+  }
+
+  #hud-zone-name {
+    font-size: 8px;
+  }
+
+  #hud-top-right {
+    font-size: 10px;
+  }
+
+  #hud-bottom-nav {
+    bottom: 10px;
+    padding: 8px 10px;
+  }
+
+  #nav-zones {
+    overflow-x: auto;
+    max-width: 60vw;
+  }
+
+  .nav-zone {
+    font-size: 6px;
+    padding: 6px 8px;
+    white-space: nowrap;
+  }
+
+  #stats-panel {
+    width: 100vw;
+    height: 50vh;
+    top: auto;
+    bottom: 0;
+    border-left: none;
+    border-top: 1px solid #334155;
+    border-radius: 16px 16px 0 0;
+  }
+
+  #stats-toggle {
+    top: auto;
+    bottom: 80px;
+    right: 10px;
+    transform: none;
+    writing-mode: horizontal-tb;
+    border-right: 1px solid #334155;
+    border-radius: 8px;
+  }
+
+  #tooltip {
+    left: 50% !important;
+    top: auto !important;
+    bottom: 100px !important;
+    transform: translateX(-50%) !important;
+  }
+}
