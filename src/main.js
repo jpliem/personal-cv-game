@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
+import { ZONES, TOTAL_COLLECTIBLES } from './data.js';
+
+console.log(`Loaded ${ZONES.length} zones with ${TOTAL_COLLECTIBLES} collectibles`);
 
 const canvas = document.getElementById('game-canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
