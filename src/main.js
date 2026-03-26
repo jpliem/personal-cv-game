@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import { ZONES, TOTAL_COLLECTIBLES } from './data.js';
 import { buildGround, buildPath, buildSkyParticles, updateParticles } from './world.js';
+import { buildZones } from './zones.js';
 
 const canvas = document.getElementById('game-canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -35,6 +36,7 @@ scene.add(dirLight);
 // Build world
 buildGround(scene);
 buildPath(scene);
+const zoneGroups = buildZones(scene);
 const particles = buildSkyParticles(scene);
 
 // Resize
