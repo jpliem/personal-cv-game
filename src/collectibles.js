@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import TWEEN from '@tweenjs/tween.js';
+import * as TWEEN from '@tweenjs/tween.js';
 import { ZONES, TOTAL_COLLECTIBLES } from './data.js';
 
 const collectedSet = new Set();
@@ -7,23 +7,34 @@ const collectibleMeshes = [];
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-function makeCollectibleShape(icon, color) {
+function makeCollectibleShape(color) {
   const group = new THREE.Group();
-  const mat = new THREE.MeshLambertMaterial({ color });
-  const glowMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.3 });
 
-  const core = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.4, 0.4), mat);
-  group.add(core);
-
-  const glow = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.6, 0.6), glowMat);
+  // Outer glow shell
+  const glowMat = new THREE.MeshBasicMaterial({
+    color,
+    transparent: true,
+    opacity: 0.15,
+  });
+  const glow = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.6, 1.6), glowMat);
   group.add(glow);
 
-  const accent = new THREE.Mesh(
-    new THREE.BoxGeometry(0.15, 0.2, 0.15),
-    new THREE.MeshLambertMaterial({ color: 0xffffff })
-  );
-  accent.position.y = 0.3;
-  group.add(accent);
+  // Core gem
+  const coreMat = new THREE.MeshPhongMaterial({
+    color,
+    emissive: color,
+    emissiveIntensity: 0.4,
+    flatShading: true,
+  });
+  const core = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.9, 0.9), coreMat);
+  core.rotation.set(Math.PI / 4, Math.PI / 4, 0);
+  group.add(core);
+
+  // Inner bright spark
+  const sparkMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
+  const spark = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.25, 0.25), sparkMat);
+  spark.rotation.set(Math.PI / 4, 0, Math.PI / 4);
+  group.add(spark);
 
   return group;
 }
@@ -31,20 +42,21 @@ function makeCollectibleShape(icon, color) {
 export function buildCollectibles(scene) {
   ZONES.forEach((zone) => {
     zone.collectibles.forEach((col, i) => {
-      const angle = (i / zone.collectibles.length) * Math.PI * 2;
-      const radius = 3.5;
+      const angle = ((i + 0.5) / zone.collectibles.length) * Math.PI * 2;
+      const radius = 4.5;
       const x = zone.position.x + Math.cos(angle) * radius;
       const z = zone.position.z + Math.sin(angle) * radius;
 
-      const mesh = makeCollectibleShape(col.icon, zone.colors.primary);
-      mesh.position.set(x, 2, z);
-      mesh.userData.collectibleId = col.id;
-      mesh.userData.label = col.label;
-      mesh.userData.baseY = 2;
-      mesh.userData.phaseOffset = i * 1.2;
+      const group = makeCollectibleShape(zone.colors.primary);
+      group.position.set(x, 2.5, z);
+      group.userData.collectibleId = col.id;
+      group.userData.label = col.label;
+      group.userData.baseY = 2.5;
+      group.userData.phaseOffset = i * 1.5;
+      group.userData.collected = false;
 
-      scene.add(mesh);
-      collectibleMeshes.push(mesh);
+      scene.add(group);
+      collectibleMeshes.push(group);
     });
   });
 
@@ -52,49 +64,87 @@ export function buildCollectibles(scene) {
 }
 
 export function updateCollectibles(time) {
-  collectibleMeshes.forEach((mesh) => {
-    if (collectedSet.has(mesh.userData.collectibleId)) return;
-    mesh.position.y =
-      mesh.userData.baseY + Math.sin(time * 0.003 + mesh.userData.phaseOffset) * 0.3;
-    mesh.rotation.y += 0.02;
+  collectibleMeshes.forEach((group) => {
+    if (group.userData.collected) return;
+
+    // Bob up and down
+    group.position.y = group.userData.baseY + Math.sin(time * 0.002 + group.userData.phaseOffset) * 0.5;
+
+    // Slow rotation
+    group.rotation.y += 0.015;
+
+    // Pulse the glow
+    const glow = group.children[0];
+    if (glow && glow.material) {
+      glow.material.opacity = 0.1 + Math.sin(time * 0.003 + group.userData.phaseOffset) * 0.08;
+    }
+
+    // Rotate inner spark
+    const spark = group.children[2];
+    if (spark) {
+      spark.rotation.y += 0.04;
+    }
   });
 }
 
-export function handleCollectibleClick(event, camera, scene) {
-  const rect = event.target.getBoundingClientRect();
+export function handleCollectibleClick(event, camera, canvas) {
+  const rect = canvas.getBoundingClientRect();
   mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
   mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
   raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(
-    collectibleMeshes.flatMap((m) => m.children),
-    false
-  );
 
+  // Check all children of all collectible groups
+  const allChildren = collectibleMeshes
+    .filter((m) => !m.userData.collected)
+    .flatMap((m) => m.children);
+
+  const intersects = raycaster.intersectObjects(allChildren, false);
   if (intersects.length === 0) return null;
 
   const hitGroup = intersects[0].object.parent;
   const id = hitGroup.userData.collectibleId;
-
   if (!id || collectedSet.has(id)) return null;
 
+  // Mark collected
   collectedSet.add(id);
+  hitGroup.userData.collected = true;
 
+  // Celebration animation — pop up, spin, then shrink and settle
   new TWEEN.Tween(hitGroup.scale)
-    .to({ x: 1.5, y: 1.5, z: 1.5 }, 150)
+    .to({ x: 1.8, y: 1.8, z: 1.8 }, 200)
     .easing(TWEEN.Easing.Back.Out)
     .chain(
       new TWEEN.Tween(hitGroup.scale)
-        .to({ x: 0.8, y: 0.8, z: 0.8 }, 200)
+        .to({ x: 0.6, y: 0.6, z: 0.6 }, 400)
         .easing(TWEEN.Easing.Quadratic.Out)
     )
     .start();
 
-  hitGroup.children.forEach((child) => {
-    if (child.material && child.material.transparent) {
-      child.material.opacity = 0.1;
-    }
-  });
+  new TWEEN.Tween(hitGroup.position)
+    .to({ y: hitGroup.position.y + 2 }, 200)
+    .easing(TWEEN.Easing.Quadratic.Out)
+    .chain(
+      new TWEEN.Tween(hitGroup.position)
+        .to({ y: hitGroup.userData.baseY }, 400)
+        .easing(TWEEN.Easing.Bounce.Out)
+    )
+    .start();
+
+  // Dim after collection
+  setTimeout(() => {
+    hitGroup.children.forEach((child) => {
+      if (child.material) {
+        if (child.material.transparent) {
+          child.material.opacity = 0.05;
+        } else {
+          child.material.emissiveIntensity = 0;
+          child.material.opacity = 0.4;
+          child.material.transparent = true;
+        }
+      }
+    });
+  }, 700);
 
   return {
     id,
