@@ -6,7 +6,7 @@ export const ZONES = [
     period: '',
     description: 'A curious kid with big dreams',
     colors: { primary: 0xfca5a5, secondary: 0xf87171, accent: 0xfecaca },
-    position: { x: -12, z: 8 },
+    position: { x: -20, z: 14 },
     dialogue: [
       { speaker: 'narrator', text: 'Every great journey starts small...' },
       { speaker: 'jonathan', text: 'Hi! I\'m Jonathan. When I was a kid, I was always curious about how things worked.' },
@@ -25,10 +25,10 @@ export const ZONES = [
     colors: { primary: 0x4ade80, secondary: 0x22c55e, accent: 0x86efac },
     position: { x: 0, z: 0 },
     dialogue: [
-      { speaker: 'narrator', text: 'Our story begins at BINUS University, Jakarta...' },
-      { speaker: 'jonathan', text: 'This is where it all started. Four years of computer science — algorithms, data structures, the works.' },
-      { speaker: 'jonathan', text: 'I even got to publish a research paper on autonomous drone navigation with IEEE. That was a proud moment.' },
-      { speaker: 'narrator', text: 'With a GPA of 3.63 and a published paper, the next chapter awaited...' },
+      { speaker: 'narrator', text: 'Our story begins at BINUS University...' },
+      { speaker: 'jonathan', text: '3 and a half years of computer science — algorithms, data structures, software engineering.' },
+      { speaker: 'jonathan', text: 'Graduated with a GPA of 3.63 and published a research paper on autonomous drone navigation with IEEE.' },
+      { speaker: 'narrator', text: 'A solid foundation. The next chapter awaited...' },
     ],
     collectibles: [
       { id: 'binus-1', label: 'Bachelor of Computer Science, GPA 3.63' },
@@ -41,14 +41,15 @@ export const ZONES = [
         name: 'Drone Thesis',
         emoji: '🛸',
         color: 0x34d399,
-        offset: { x: 0, z: 9 },
+        offset: { x: 10, z: 12 },
         dialogue: [
           { speaker: 'narrator', text: 'Side Quest: The Drone Project' },
           { speaker: 'jonathan', text: 'For my thesis, I built a drone pathfinding system using 3D mapping inside Unity.' },
-          { speaker: 'jonathan', text: 'The cool part? Unity generated the navigation path, then sent real flight commands to a physical drone.' },
+          { speaker: 'jonathan', text: 'Unity generated the navigation path, then sent real flight commands to a physical drone.' },
           { speaker: 'jonathan', text: 'The drone reported its location back using its onboard gyroscope. Real hardware, real software, real-time.' },
-          { speaker: 'narrator', text: 'This project was published as an IEEE paper. Not bad for a thesis!' },
+          { speaker: 'narrator', text: 'Published as an IEEE paper: ieeexplore.ieee.org/document/9915133' },
         ],
+        link: 'https://ieeexplore.ieee.org/document/9915133',
       },
     ],
   },
@@ -59,7 +60,7 @@ export const ZONES = [
     period: '2021-2022',
     description: 'Software Quality Assurance Intern',
     colors: { primary: 0x60a5fa, secondary: 0x3b82f6, accent: 0x1e293b },
-    position: { x: 12, z: -8 },
+    position: { x: 20, z: -14 },
     dialogue: [
       { speaker: 'narrator', text: 'While still in university, Jonathan landed his first real tech role...' },
       { speaker: 'jonathan', text: 'Bank Central Asia — one of the biggest banks in Indonesia. I was testing APIs that handled real money.' },
@@ -80,7 +81,7 @@ export const ZONES = [
     period: '2022-2024',
     description: 'Associate Consultant',
     colors: { primary: 0xfbbf24, secondary: 0xf59e0b, accent: 0xfde68a },
-    position: { x: 24, z: -16 },
+    position: { x: 40, z: -28 },
     dialogue: [
       { speaker: 'narrator', text: 'The adventure expanded. Ernst & Young — the global consulting firm.' },
       { speaker: 'jonathan', text: 'Every few months, a new client, a new industry, a new challenge. Health insurance, banking, government.' },
@@ -100,7 +101,7 @@ export const ZONES = [
         name: 'Proposals',
         emoji: '📝',
         color: 0xf59e0b,
-        offset: { x: -7, z: 6 },
+        offset: { x: -10, z: -12 },
         dialogue: [
           { speaker: 'narrator', text: 'Side Quest: The Proposal Machine' },
           { speaker: 'jonathan', text: 'At EY, I didn\'t just execute — I also wrote proposals to win new projects.' },
@@ -112,7 +113,7 @@ export const ZONES = [
         name: 'Data Modeling',
         emoji: '🗄️',
         color: 0xfbbf24,
-        offset: { x: 0, z: 9 },
+        offset: { x: 3, z: -14 },
         dialogue: [
           { speaker: 'narrator', text: 'Side Quest: The Data Architect' },
           { speaker: 'jonathan', text: 'For the cloud migration project, I did hands-on data modeling and wrote testing scripts.' },
@@ -124,7 +125,7 @@ export const ZONES = [
         name: 'IT Strategy',
         emoji: '🗺️',
         color: 0xd97706,
-        offset: { x: 7, z: 6 },
+        offset: { x: -3, z: 14 },
         dialogue: [
           { speaker: 'narrator', text: 'Side Quest: The Strategist' },
           { speaker: 'jonathan', text: 'I helped build a 5-year IT roadmap for a state-owned bank. Capability gaps, restructuring plans, upskilling roadmaps.' },
@@ -136,7 +137,7 @@ export const ZONES = [
         name: 'Bank Separation',
         emoji: '🏦',
         color: 0xeab308,
-        offset: { x: 8, z: -3 },
+        offset: { x: 10, z: -12 },
         dialogue: [
           { speaker: 'narrator', text: 'Side Quest: The Great Divide' },
           { speaker: 'jonathan', text: 'An Australian multinational bank was splitting off its Indonesian operations. M&A-driven tech separation.' },
@@ -152,7 +153,7 @@ export const ZONES = [
     period: '2024-2025',
     description: 'Senior IT Internal Audit Officer',
     colors: { primary: 0xa78bfa, secondary: 0x8b5cf6, accent: 0x7c3aed },
-    position: { x: 36, z: -24 },
+    position: { x: 60, z: -42 },
     dialogue: [
       { speaker: 'narrator', text: 'Next stop: Blibli — one of Indonesia\'s largest e-commerce platforms.' },
       { speaker: 'jonathan', text: 'I switched sides. Instead of building systems, I was now auditing them.' },
@@ -171,7 +172,7 @@ export const ZONES = [
         name: 'Audit Automation',
         emoji: '🤖',
         color: 0x8b5cf6,
-        offset: { x: -7, z: 5 },
+        offset: { x: -3, z: 14 },
         dialogue: [
           { speaker: 'narrator', text: 'Side Quest: The Automation Pioneer' },
           { speaker: 'jonathan', text: 'Manual auditing was slow. So I built automation programs to speed up the audit process.' },
@@ -184,7 +185,7 @@ export const ZONES = [
         name: 'AI Adoption',
         emoji: '🧠',
         color: 0xa78bfa,
-        offset: { x: 7, z: 5 },
+        offset: { x: 3, z: 14 },
         dialogue: [
           { speaker: 'narrator', text: 'Side Quest: The AI Evangelist' },
           { speaker: 'jonathan', text: 'I introduced the audit team to AI tools. Showed them how to use LLMs for analysis, summarization, and research.' },
@@ -200,7 +201,7 @@ export const ZONES = [
     period: '2025-Present',
     description: 'Technical Lead',
     colors: { primary: 0xf472b6, secondary: 0xec4899, accent: 0xf9a8d4 },
-    position: { x: 48, z: -32 },
+    position: { x: 80, z: -56 },
     dialogue: [
       { speaker: 'narrator', text: 'The final chapter (so far). GSPE — where everything came together.' },
       { speaker: 'jonathan', text: 'Technical Lead. 19 enterprise systems. 9 departments. 505+ tracked requests. This is the big picture.' },
@@ -221,12 +222,13 @@ export const ZONES = [
         name: 'Smart Factory',
         emoji: '🏭',
         color: 0x4ade80,
-        offset: { x: -8, z: 5 },
+        offset: { x: -14, z: 0 },
         dialogue: [
-          { speaker: 'narrator', text: 'Side Quest: The Smart Factory' },
-          { speaker: 'jonathan', text: 'I directed my team to install IoT sensors into a containerized mini data center — smart rack servers and containment systems.' },
-          { speaker: 'jonathan', text: 'Then we went bigger. Smart factory: monitoring water treatment, power for CNC machines, smart meeting rooms.' },
-          { speaker: 'jonathan', text: 'We even used OpenCV for activity detection in the production area. Seeing the factory come alive with data was incredible.' },
+          { speaker: 'narrator', text: 'Side Quest: The Smart Factory & IoT Data Center' },
+          { speaker: 'jonathan', text: 'First, we built a containerized mini data center — a physical server rack with containment, packed with IoT sensors monitoring temperature, humidity, power, and airflow.' },
+          { speaker: 'jonathan', text: 'Then we scaled up to a smart factory: monitoring water treatment systems, power feeds for CNC machines, and smart meeting rooms.' },
+          { speaker: 'jonathan', text: 'We used OpenCV for activity detection in the production area — tracking movement patterns and safety compliance in real-time.' },
+          { speaker: 'narrator', text: 'From a containerized rack to a living, breathing smart factory.' },
         ],
       },
       {
@@ -234,12 +236,14 @@ export const ZONES = [
         name: 'NexaBrick',
         emoji: '📦',
         color: 0xf472b6,
-        offset: { x: 0, z: 10 },
+        offset: { x: 0, z: 16 },
+        link: 'https://www.ioteknologi.com/',
         dialogue: [
           { speaker: 'narrator', text: 'Side Quest: From Prototype to Product' },
           { speaker: 'jonathan', text: 'NexaBrick started as an IoT experiment and became a full commercial product.' },
           { speaker: 'jonathan', text: 'I handled everything end-to-end: hardware engineering, software, pricing strategy, sales deck, product catalogue.' },
           { speaker: 'jonathan', text: 'It\'s one thing to write code. It\'s another to ship a physical product to market.' },
+          { speaker: 'narrator', text: 'Check it out: ioteknologi.com' },
         ],
       },
       {
@@ -247,7 +251,7 @@ export const ZONES = [
         name: 'AI R&D Lab',
         emoji: '🔬',
         color: 0x60a5fa,
-        offset: { x: 8, z: 5 },
+        offset: { x: 14, z: 0 },
         dialogue: [
           { speaker: 'narrator', text: 'Side Quest: The AI Laboratory' },
           { speaker: 'jonathan', text: 'I set up an R&D pipeline to evaluate open-source AI tools. About 10 prototypes delivered.' },
@@ -264,7 +268,7 @@ export const ZONES = [
     period: '',
     description: 'The journey continues...',
     colors: { primary: 0x38bdf8, secondary: 0x0ea5e9, accent: 0x7dd3fc },
-    position: { x: 60, z: -40 },
+    position: { x: 100, z: -70 },
     dialogue: [
       { speaker: 'narrator', text: 'The story isn\'t over. In fact, it\'s just getting started.' },
       { speaker: 'jonathan', text: 'I\'m always looking for the next challenge. Whether it\'s leading teams, building AI systems, or creating products.' },
@@ -279,43 +283,43 @@ export const ZONES = [
 
 export const SKILLS = [
   {
-    group: 'Development',
-    color: 0x60a5fa,
+    group: 'Leadership & Strategy',
+    color: 0xfbbf24,
     items: [
-      { name: '.NET / C#', level: 0.7 },
-      { name: 'Vue.js', level: 0.7 },
-      { name: 'Next.js', level: 0.6 },
-      { name: 'PostgreSQL', level: 0.7 },
-      { name: 'Node.js', level: 0.6 },
+      { name: 'Project Management', level: 0.9 },
+      { name: 'Strategic Planning', level: 0.85 },
+      { name: 'Business Analysis', level: 0.8 },
+      { name: 'Process Improvement', level: 0.85 },
     ],
   },
   {
-    group: 'Infrastructure',
-    color: 0x4ade80,
-    items: [
-      { name: 'Docker', level: 0.7 },
-      { name: 'Microservices', level: 0.6 },
-      { name: 'Linux Admin', level: 0.6 },
-    ],
-  },
-  {
-    group: 'Governance',
+    group: 'Governance & Compliance',
     color: 0xa78bfa,
     items: [
-      { name: 'IT Audit', level: 0.8 },
-      { name: 'ISO 27001', level: 0.7 },
-      { name: 'NIST', level: 0.7 },
-      { name: 'Risk Assessment', level: 0.7 },
+      { name: 'IT Audit', level: 0.9 },
+      { name: 'Risk Assessment', level: 0.85 },
+      { name: 'Data Governance', level: 0.8 },
+      { name: 'Cybersecurity', level: 0.75 },
     ],
   },
   {
-    group: 'Automation & AI',
+    group: 'Engineering',
+    color: 0x60a5fa,
+    items: [
+      { name: 'Programming', level: 0.8 },
+      { name: 'Data Analysis', level: 0.8 },
+      { name: 'Data Modeling', level: 0.75 },
+      { name: 'IoT / Hardware', level: 0.7 },
+    ],
+  },
+  {
+    group: 'Innovation',
     color: 0xf472b6,
     items: [
-      { name: 'n8n', level: 0.7 },
-      { name: 'RAG Systems', level: 0.6 },
-      { name: 'Computer Vision', level: 0.5 },
-      { name: 'AI Agents', level: 0.7 },
+      { name: 'AI / ML Prototyping', level: 0.75 },
+      { name: 'Computer Vision', level: 0.7 },
+      { name: 'Automation', level: 0.85 },
+      { name: 'Product Development', level: 0.75 },
     ],
   },
 ];
@@ -332,7 +336,8 @@ export const CERTIFICATIONS = [
 
 export const PLAYER_CARD = {
   name: 'Jonathan Putra',
-  title: 'Technical Lead',
+  title: 'Technology Generalist',
+  subtitle: 'Advisory | Assurance | Engineering',
   location: 'Jakarta, Indonesia',
   email: 'jonathanputra23@gmail.com',
   linkedin: 'linkedin.com/in/jonathan-putra/',

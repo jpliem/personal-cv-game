@@ -15,10 +15,15 @@
     <div id="hud-zone-name">BINUS — Campus</div>
   </div>
 
-  <!-- HUD: Top-right collectible counter -->
+  <!-- HUD: Top-right buttons -->
   <div id="hud-top-right">
     <span id="hud-gem-icon">⭐</span>
     <span id="hud-counter">0 / 17 discovered</span>
+  </div>
+
+  <div id="hud-buttons">
+    <button id="mute-btn" title="Toggle sound">&#x1F50A;</button>
+    <button id="menu-btn" title="Menu">&#9776;</button>
   </div>
 
   <!-- HUD: Bottom nav bar -->
@@ -42,15 +47,32 @@
     <button id="nav-next" class="nav-arrow">&rarr;</button>
   </div>
 
-  <!-- HUD: Mute button -->
-  <button id="mute-btn" title="Toggle sound">&#x1F50A;</button>
-
   <!-- HUD: Right stats panel -->
   <button id="stats-toggle">&#9776; Stats</button>
   <div id="stats-panel" class="hidden">
+    <button id="stats-close">&times;</button>
     <div id="stats-player-card"></div>
     <div id="stats-skills"></div>
     <div id="stats-badges"></div>
+  </div>
+
+  <!-- Menu / Credits overlay -->
+  <div id="menu-overlay" class="hidden">
+    <div id="menu-card">
+      <h2>Menu</h2>
+      <button id="menu-resume" class="menu-option">Resume</button>
+      <button id="menu-restart" class="menu-option">Restart Journey</button>
+      <div id="credits">
+        <h3>Credits</h3>
+        <div class="credit-line">Design & Content: Jonathan Putra</div>
+        <div class="credit-line">Built with: Three.js, Vite</div>
+        <div class="credit-line">Animation: @tweenjs/tween.js</div>
+        <div class="credit-line">Audio: Web Audio API (procedural)</div>
+        <div class="credit-line">Font: Press Start 2P (Google Fonts)</div>
+        <div class="credit-line">Assisted by: Claude (Anthropic)</div>
+      </div>
+      <button id="menu-close" class="menu-close-btn">&times;</button>
+    </div>
   </div>
 
   <!-- Zone labels (floating logos) -->
@@ -65,6 +87,18 @@
       </a>
       <a href="https://linkedin.com/in/jonathan-putra/" target="_blank" class="contact-link">
         <span class="contact-icon">in</span> linkedin.com/in/jonathan-putra
+      </a>
+    </div>
+    <div class="contact-articles">
+      <h3 class="articles-title">Published Work</h3>
+      <a href="https://ieeexplore.ieee.org/document/9915133" target="_blank" class="contact-link">
+        <span class="contact-icon">&#128196;</span> IEEE: Autonomous Drone Indoor Navigation
+      </a>
+      <a href="https://medium.com/generative-ai/the-plan-approve-execute-pattern-for-asynchronous-ai-development-2c1db9fa08b1" target="_blank" class="contact-link">
+        <span class="contact-icon">&#9997;</span> Medium: Plan-Approve-Execute Pattern for AI Dev
+      </a>
+      <a href="https://www.ioteknologi.com/" target="_blank" class="contact-link">
+        <span class="contact-icon">&#128225;</span> NexaBrick IoT Product (ioteknologi.com)
       </a>
     </div>
     <button id="reset-btn">Play Again from the Beginning</button>

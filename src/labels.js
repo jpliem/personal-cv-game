@@ -22,8 +22,8 @@ export function createLabels() {
     el.className = 'zone-label';
     el.innerHTML = `
       <div class="zone-label-emoji">${logo.emoji || ''}</div>
-      ${logo.text ? `<div class="zone-label-text" style="color:${logo.color}">${logo.text}</div>` : ''}
-      <div class="zone-label-period">${zone.period || ''}</div>
+      ${logo.text ? `<div class="zone-label-text" style="--label-color:${logo.color}; border-color:${logo.color}">${logo.text}</div>` : ''}
+      ${zone.period ? `<div class="zone-label-period">${zone.period}</div>` : ''}
     `;
     container.appendChild(el);
     labelElements.push({ el, worldX: zone.position.x, worldZ: zone.position.z, height: 9 });

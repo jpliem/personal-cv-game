@@ -10,14 +10,17 @@ export function initHUD() {
 function buildPlayerCard() {
   const container = document.getElementById('stats-player-card');
   container.innerHTML = `
-    <div class="stats-section">
-      <h3>PLAYER CARD</h3>
-      <div class="player-info">
-        <div>${PLAYER_CARD.name}</div>
-        <div>${PLAYER_CARD.title}</div>
-        <div>${PLAYER_CARD.location}</div>
-        <div><a href="mailto:${PLAYER_CARD.email}">${PLAYER_CARD.email}</a></div>
-        <div><a href="https://${PLAYER_CARD.linkedin}" target="_blank">${PLAYER_CARD.linkedin}</a></div>
+    <div class="stats-section player-card-section">
+      <div class="pc-avatar">JP</div>
+      <div class="pc-info">
+        <div class="pc-name">${PLAYER_CARD.name}</div>
+        <div class="pc-title">${PLAYER_CARD.title}</div>
+        ${PLAYER_CARD.subtitle ? `<div class="pc-subtitle">${PLAYER_CARD.subtitle}</div>` : ''}
+        <div class="pc-location">${PLAYER_CARD.location}</div>
+      </div>
+      <div class="pc-links">
+        <a href="mailto:${PLAYER_CARD.email}" class="pc-link">${PLAYER_CARD.email}</a>
+        <a href="https://${PLAYER_CARD.linkedin}" target="_blank" class="pc-link">${PLAYER_CARD.linkedin}</a>
       </div>
     </div>
   `;
@@ -28,21 +31,26 @@ function buildSkills() {
   const groups = SKILLS.map((group) => {
     const colorHex = '#' + group.color.toString(16).padStart(6, '0');
     const bars = group.items
-      .map(
-        (item) => `
-      <div class="skill-bar">
-        <span class="skill-bar-name">${item.name}</span>
-        <div class="skill-bar-fill">
-          <div class="skill-bar-fill-inner" style="width:${item.level * 100}%; background:${colorHex}"></div>
+      .map((item) => {
+        const pct = Math.round(item.level * 100);
+        return `
+      <div class="skill-row">
+        <span class="skill-name">${item.name}</span>
+        <div class="skill-track">
+          <div class="skill-fill" style="width:${pct}%; background:${colorHex}"></div>
         </div>
+        <span class="skill-pct" style="color:${colorHex}">${pct}</span>
       </div>
-    `
-      )
+    `;
+      })
       .join('');
 
     return `
-      <div class="skill-group">
-        <div class="skill-group-name">${group.group}</div>
+      <div class="skill-category">
+        <div class="skill-cat-header">
+          <span class="skill-cat-dot" style="background:${colorHex}"></span>
+          <span class="skill-cat-name">${group.group}</span>
+        </div>
         ${bars}
       </div>
     `;
@@ -50,7 +58,7 @@ function buildSkills() {
 
   container.innerHTML = `
     <div class="stats-section">
-      <h3>SKILLS</h3>
+      <h3>ATTRIBUTES</h3>
       ${groups}
     </div>
   `;
@@ -65,7 +73,7 @@ function buildBadges() {
   container.innerHTML = `
     <div class="stats-section">
       <h3>BADGES</h3>
-      ${badges}
+      <div class="badges-grid">${badges}</div>
     </div>
   `;
 }
@@ -73,8 +81,13 @@ function buildBadges() {
 function initStatsToggle() {
   const toggle = document.getElementById('stats-toggle');
   const panel = document.getElementById('stats-panel');
+  const closeBtn = document.getElementById('stats-close');
 
   toggle.addEventListener('click', () => {
     panel.classList.toggle('hidden');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    panel.classList.add('hidden');
   });
 }

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 import { ZONES, TOTAL_COLLECTIBLES } from './data.js';
-import { buildGround, buildPath, buildSideQuestAreas, buildSkyParticles, updateParticles } from './world.js';
+import { buildGround, buildPath, buildSideQuestAreas, buildSkyParticles, updateParticles, getClickableGrounds } from './world.js';
 import { buildZones } from './zones.js';
 import { navigateToZone, goNext, goPrev, updateNavigation, isNavigating } from './navigation.js';
 import { buildCollectibles, updateCollectibles, handleCollectibleClick } from './collectibles.js';
@@ -9,7 +9,7 @@ import { initHUD } from './hud.js';
 import { showDialogue, advanceDialogue, isDialogueActive } from './dialogue.js';
 import { createLabels, updateLabels } from './labels.js';
 import { startBgMusic, playCollectSound, playTransitionSound, toggleMute } from './audio.js';
-import { updateSideQuests, hideSideQuests } from './sidequests.js';
+import { tickSideQuests, hideSideQuests } from './sidequests.js';
 
 // --- Renderer ---
 const canvas = document.getElementById('game-canvas');
@@ -20,7 +20,7 @@ renderer.setClearColor(0xdfe6f0);
 
 // --- Scene ---
 const scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0xdfe6f0, 40, 80);
+scene.fog = new THREE.Fog(0xdfe6f0, 60, 120);
 
 // --- Camera ---
 const aspect = window.innerWidth / window.innerHeight;
@@ -114,13 +114,7 @@ function onZoneArrive(index) {
   if (!dialogueShown.has(index)) {
     dialogueShown.add(index);
     hideSideQuests();
-    setTimeout(() => showDialogue(index, () => {
-      // Show side quests after main dialogue ends
-      updateSideQuests();
-    }), 800);
-  } else {
-    // Already visited — show side quests immediately
-    updateSideQuests();
+    setTimeout(() => showDialogue(index), 800);
   }
 }
 
@@ -152,6 +146,28 @@ document.getElementById('mute-btn').addEventListener('click', (e) => {
   ensureMusic();
   const muted = toggleMute();
   document.getElementById('mute-btn').textContent = muted ? '🔇' : '🔊';
+});
+
+// --- Menu button ---
+const menuOverlay = document.getElementById('menu-overlay');
+document.getElementById('menu-btn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  menuOverlay.classList.remove('hidden');
+});
+document.getElementById('menu-resume').addEventListener('click', () => {
+  menuOverlay.classList.add('hidden');
+});
+document.getElementById('menu-close').addEventListener('click', () => {
+  menuOverlay.classList.add('hidden');
+});
+document.getElementById('menu-restart').addEventListener('click', () => {
+  menuOverlay.classList.add('hidden');
+  document.getElementById('contact-card').classList.add('hidden');
+  dialogueShown.clear();
+  navigateToZone(0, onZoneArrive);
+});
+menuOverlay.addEventListener('click', (e) => {
+  if (e.target === menuOverlay) menuOverlay.classList.add('hidden');
 });
 
 // --- Navigation Listeners ---
@@ -191,6 +207,9 @@ document.getElementById('dialogue-box').addEventListener('click', (e) => {
   advanceDialogue();
 });
 
+const groundRaycaster = new THREE.Raycaster();
+const groundMouse = new THREE.Vector2();
+
 canvas.addEventListener('click', (event) => {
   // Try advancing dialogue first
   if (isDialogueActive()) {
@@ -199,20 +218,40 @@ canvas.addEventListener('click', (event) => {
   }
 
   ensureMusic();
+
+  // Try collectible click first
   const result = handleCollectibleClick(event, camera, canvas);
-  if (!result) return;
+  if (result) {
+    playCollectSound();
+    document.getElementById('hud-counter').textContent =
+      `${result.collected} / ${result.total} discovered`;
 
-  playCollectSound();
-  document.getElementById('hud-counter').textContent =
-    `${result.collected} / ${result.total} discovered`;
+    const tooltip = document.getElementById('tooltip');
+    const tooltipText = document.getElementById('tooltip-text');
+    tooltipText.textContent = result.label;
+    tooltip.classList.remove('hidden');
+    tooltip.style.left = `${result.screenPosition.x}px`;
+    tooltip.style.top = `${result.screenPosition.y - 60}px`;
+    setTimeout(() => tooltip.classList.add('hidden'), 4000);
+    return;
+  }
 
-  const tooltip = document.getElementById('tooltip');
-  const tooltipText = document.getElementById('tooltip-text');
-  tooltipText.textContent = result.label;
-  tooltip.classList.remove('hidden');
-  tooltip.style.left = `${result.screenPosition.x}px`;
-  tooltip.style.top = `${result.screenPosition.y - 60}px`;
-  setTimeout(() => tooltip.classList.add('hidden'), 4000);
+  // Try clicking on a ground platform to navigate there
+  const rect = canvas.getBoundingClientRect();
+  groundMouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  groundMouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+  groundRaycaster.setFromCamera(groundMouse, camera);
+
+  const grounds = getClickableGrounds();
+  const hits = groundRaycaster.intersectObjects(grounds);
+  if (hits.length > 0) {
+    const hit = hits[0].object;
+    if (hit.userData.isMainZone && hit.userData.zoneIndex !== undefined) {
+      hideSideQuests();
+      playTransitionSound();
+      navigateToZone(hit.userData.zoneIndex, onZoneArrive);
+    }
+  }
 });
 
 // --- Keyboard ---
@@ -259,6 +298,7 @@ function animate(time) {
   updateParticles(particles, time);
   updateCollectibles(time);
   updateLabels(camera);
+  tickSideQuests();
 
   // Player animation
   if (moveDist > 0.3) {

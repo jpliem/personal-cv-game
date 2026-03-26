@@ -10,30 +10,43 @@ const mouse = new THREE.Vector2();
 function makeCollectibleShape(color) {
   const group = new THREE.Group();
 
-  // Outer glow shell
+  // Outer glow ring
   const glowMat = new THREE.MeshBasicMaterial({
-    color,
+    color: 0xfbbf24,
     transparent: true,
-    opacity: 0.15,
+    opacity: 0.12,
   });
-  const glow = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.6, 1.6), glowMat);
+  const glow = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.4, 1.4), glowMat);
   group.add(glow);
 
-  // Core gem
-  const coreMat = new THREE.MeshPhongMaterial({
-    color,
-    emissive: color,
-    emissiveIntensity: 0.4,
+  // Star shape: a central block + 4 arms
+  const starMat = new THREE.MeshPhongMaterial({
+    color: 0xfbbf24,
+    emissive: 0xfbbf24,
+    emissiveIntensity: 0.5,
     flatShading: true,
   });
-  const core = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.9, 0.9), coreMat);
-  core.rotation.set(Math.PI / 4, Math.PI / 4, 0);
-  group.add(core);
 
-  // Inner bright spark
-  const sparkMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
-  const spark = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.25, 0.25), sparkMat);
-  spark.rotation.set(Math.PI / 4, 0, Math.PI / 4);
+  // Center
+  const center = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), starMat);
+  group.add(center);
+
+  // 4 points of the star
+  const pointGeo = new THREE.BoxGeometry(0.3, 0.7, 0.3);
+  [
+    { x: 0, y: 0.5, z: 0 },
+    { x: 0, y: -0.5, z: 0 },
+    { x: 0.5, y: 0, z: 0 },
+    { x: -0.5, y: 0, z: 0 },
+  ].forEach((pos) => {
+    const point = new THREE.Mesh(pointGeo, starMat);
+    point.position.set(pos.x, pos.y, pos.z);
+    group.add(point);
+  });
+
+  // Bright white core
+  const sparkMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 });
+  const spark = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), sparkMat);
   group.add(spark);
 
   return group;

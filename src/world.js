@@ -1,8 +1,14 @@
 import * as THREE from 'three';
 import { ZONES } from './data.js';
 
+const clickableGrounds = [];
+
+export function getClickableGrounds() {
+  return clickableGrounds;
+}
+
 export function buildGround(scene) {
-  ZONES.forEach((zone) => {
+  ZONES.forEach((zone, i) => {
     // Main platform
     const groundGeo = new THREE.BoxGeometry(12, 1, 12);
     const groundMat = new THREE.MeshPhongMaterial({
@@ -11,7 +17,10 @@ export function buildGround(scene) {
     });
     const ground = new THREE.Mesh(groundGeo, groundMat);
     ground.position.set(zone.position.x, -0.5, zone.position.z);
+    ground.userData.zoneIndex = i;
+    ground.userData.isMainZone = true;
     scene.add(ground);
+    clickableGrounds.push(ground);
 
     // Darker base (gives depth)
     const baseMat = new THREE.MeshPhongMaterial({
@@ -108,7 +117,10 @@ export function buildSideQuestAreas(scene) {
       const platMat = new THREE.MeshPhongMaterial({ color: sq.color, flatShading: true });
       const plat = new THREE.Mesh(new THREE.BoxGeometry(5, 0.6, 5), platMat);
       plat.position.set(wx, -0.3, wz);
+      plat.userData.sideQuestId = sq.id;
+      plat.userData.isSideQuest = true;
       scene.add(plat);
+      clickableGrounds.push(plat);
 
       // Platform border
       const borderMat = new THREE.MeshPhongMaterial({
@@ -171,9 +183,9 @@ export function buildSkyParticles(scene) {
     });
     const particle = new THREE.Mesh(geo, mat);
     particle.position.set(
-      Math.random() * 70 - 10,
+      Math.random() * 120 - 20,
       Math.random() * 20 + 2,
-      Math.random() * 50 - 40
+      Math.random() * 90 - 65
     );
     particle.userData.speed = 0.3 + Math.random() * 0.8;
     particle.userData.baseY = particle.position.y;
@@ -192,7 +204,7 @@ export function updateParticles(particles, time) {
     p.position.x += p.userData.driftX;
     p.rotation.x += p.userData.rotSpeed;
     p.rotation.y += p.userData.rotSpeed * 0.7;
-    if (p.position.x > 65) p.position.x = -10;
-    if (p.position.x < -15) p.position.x = 60;
+    if (p.position.x > 110) p.position.x = -20;
+    if (p.position.x < -25) p.position.x = 100;
   });
 }

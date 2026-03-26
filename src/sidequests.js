@@ -1,27 +1,41 @@
 import { ZONES } from './data.js';
 import { showDialogue, isDialogueActive } from './dialogue.js';
-import { getCurrentZoneIndex } from './navigation.js';
+import { getCurrentZoneIndex, isNavigating } from './navigation.js';
 import { playTransitionSound } from './audio.js';
 
 const container = document.getElementById('side-quests');
 
-// Camera target override for side quest visits
 let sideQuestTarget = null;
-let returningToParent = false;
+let lastRenderedZone = -1;
+let inSideQuest = false;
 
-export function updateSideQuests() {
+// Called every frame from animation loop
+export function tickSideQuests() {
   const zoneIndex = getCurrentZoneIndex();
   const zone = ZONES[zoneIndex];
   const quests = zone.sideQuests || [];
 
-  container.innerHTML = '';
-
-  if (quests.length === 0 || isDialogueActive()) {
-    container.classList.add('hidden');
+  // Hide during dialogue, navigation, side quest visit, or if no quests
+  if (quests.length === 0 || isDialogueActive() || isNavigating() || inSideQuest) {
+    if (!container.classList.contains('hidden')) {
+      container.classList.add('hidden');
+    }
     return;
   }
 
-  container.classList.remove('hidden');
+  // Show buttons — only rebuild if zone changed
+  if (lastRenderedZone !== zoneIndex) {
+    lastRenderedZone = zoneIndex;
+    buildButtons(zone, zoneIndex, quests);
+  }
+
+  if (container.classList.contains('hidden')) {
+    container.classList.remove('hidden');
+  }
+}
+
+function buildButtons(zone, zoneIndex, quests) {
+  container.innerHTML = '';
 
   quests.forEach((quest, i) => {
     const btn = document.createElement('button');
@@ -32,6 +46,7 @@ export function updateSideQuests() {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       playTransitionSound();
+      inSideQuest = true;
 
       // Pan camera to the side quest area
       const wx = zone.position.x + quest.offset.x;
@@ -48,11 +63,10 @@ export function updateSideQuests() {
           ZONES[zoneIndex].dialogue = originalDialogue;
           // Return camera to parent zone
           sideQuestTarget = null;
-          returningToParent = true;
           setTimeout(() => {
-            returningToParent = false;
-            updateSideQuests();
-          }, 800);
+            inSideQuest = false;
+            lastRenderedZone = -1; // force rebuild
+          }, 600);
         });
       }, 600);
     });
@@ -64,9 +78,10 @@ export function updateSideQuests() {
 export function hideSideQuests() {
   container.classList.add('hidden');
   sideQuestTarget = null;
+  inSideQuest = false;
+  lastRenderedZone = -1;
 }
 
-// Called from animation loop to override camera target
 export function getSideQuestCameraTarget() {
   return sideQuestTarget;
 }
