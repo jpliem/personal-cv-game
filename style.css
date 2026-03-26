@@ -312,24 +312,43 @@ body {
 }
 
 .zone-label-emoji {
-  font-size: 28px;
-  margin-bottom: 4px;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  font-size: 36px;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
 }
 
 .zone-label-text {
-  font-size: 9px;
+  font-size: 14px;
   font-weight: bold;
-  letter-spacing: 2px;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  letter-spacing: 3px;
+  text-shadow: 0 0 10px currentColor, 0 2px 4px rgba(0,0,0,0.6);
   font-family: 'Press Start 2P', monospace;
+  background: rgba(0,0,0,0.5);
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-block;
 }
 
 .zone-label-period {
-  font-size: 7px;
-  color: #94a3b8;
-  margin-top: 2px;
+  font-size: 9px;
+  color: #cbd5e1;
+  margin-top: 4px;
   font-family: 'Press Start 2P', monospace;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.sq-label {
+  animation-duration: 2s;
+}
+
+.sq-label-name {
+  font-size: 7px;
+  color: #e2e8f0;
+  font-family: 'Press Start 2P', monospace;
+  background: rgba(0,0,0,0.4);
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 /* Contact card */
@@ -409,6 +428,65 @@ body {
 #reset-btn:hover {
   background: #fbbf24;
   color: #0f172a;
+}
+
+/* Side quests */
+#side-quests {
+  position: fixed;
+  left: 20px;
+  bottom: 80px;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: auto;
+  transition: opacity 0.3s;
+}
+
+#side-quests.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.side-quest-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 2px solid #fbbf24;
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', monospace;
+  color: #e2e8f0;
+  transition: all 0.2s;
+  animation: sq-slide-in 0.4s ease-out both;
+}
+
+@keyframes sq-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.side-quest-btn:hover {
+  background: rgba(251, 191, 36, 0.15);
+  border-color: #fde68a;
+  transform: translateX(4px);
+}
+
+.sq-emoji {
+  font-size: 18px;
+}
+
+.sq-name {
+  font-size: 7px;
+  letter-spacing: 0.5px;
 }
 
 /* Dialogue box */

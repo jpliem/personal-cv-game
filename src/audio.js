@@ -2,6 +2,7 @@ let ctx = null;
 let bgGain = null;
 let bgPlaying = false;
 let muted = false;
+let melodyTimeout = null;
 
 function getCtx() {
   if (!ctx) {
@@ -10,93 +11,95 @@ function getCtx() {
   return ctx;
 }
 
-// --- Background music: calming ambient loop ---
-// Uses layered oscillators with slow LFO modulation
+// --- Background music: cheerful music-box melody ---
+// Simple repeating melody with a warm tone
 
-let bgOscillators = [];
+// Note frequencies
+const C4 = 261.63, D4 = 293.66, E4 = 329.63, F4 = 349.23;
+const G4 = 392.0, A4 = 440.0, B4 = 493.88, C5 = 523.25;
+const D5 = 587.33, E5 = 659.25, G3 = 196.0, C3 = 130.81;
+const F3 = 174.61, A3 = 220.0;
+
+// Melody: happy, bouncy, Stardew Valley-ish
+const melody = [
+  // Phrase 1
+  E4, G4, A4, G4, E4, D4, C4, D4,
+  E4, G4, A4, B4, C5, B4, A4, G4,
+  // Phrase 2
+  A4, C5, D5, C5, A4, G4, E4, G4,
+  A4, G4, E4, D4, C4, E4, D4, C4,
+  // Phrase 3 (higher, cheerful)
+  C5, D5, E5, D5, C5, A4, G4, A4,
+  C5, B4, A4, G4, E4, G4, A4, G4,
+  // Phrase 4 (resolution)
+  E4, G4, C5, B4, A4, G4, A4, G4,
+  E4, D4, E4, G4, E4, D4, C4, 0,
+];
+
+// Bass pattern (root notes, longer)
+const bassPattern = [
+  C3, C3, G3, G3, A3, A3, F3, F3,
+  C3, C3, G3, G3, F3, F3, C3, C3,
+];
+
+const NOTE_DURATION = 0.22; // seconds per note
+const MELODY_VOLUME = 0.10;
+const BASS_VOLUME = 0.04;
+
+function playNote(ac, freq, startTime, duration, volume, type = 'sine') {
+  if (freq === 0) return; // rest
+
+  const osc = ac.createOscillator();
+  osc.type = type;
+  osc.frequency.value = freq;
+
+  const gain = ac.createGain();
+  gain.gain.setValueAtTime(0, startTime);
+  gain.gain.linearRampToValueAtTime(volume, startTime + 0.015);
+  gain.gain.setValueAtTime(volume, startTime + duration * 0.6);
+  gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+  osc.connect(gain);
+  gain.connect(bgGain);
+  osc.start(startTime);
+  osc.stop(startTime + duration + 0.05);
+}
+
+function scheduleMelody() {
+  const ac = getCtx();
+  const now = ac.currentTime + 0.1;
+
+  // Schedule all melody notes
+  melody.forEach((freq, i) => {
+    const t = now + i * NOTE_DURATION;
+    playNote(ac, freq, t, NOTE_DURATION * 0.9, MELODY_VOLUME, 'triangle');
+  });
+
+  // Schedule bass notes (each bass note = 4 melody notes)
+  bassPattern.forEach((freq, i) => {
+    const t = now + i * NOTE_DURATION * 4;
+    playNote(ac, freq, t, NOTE_DURATION * 3.8, BASS_VOLUME, 'sine');
+  });
+
+  // Loop after the melody finishes
+  const totalDuration = melody.length * NOTE_DURATION * 1000;
+  melodyTimeout = setTimeout(() => {
+    if (bgPlaying && !muted) {
+      scheduleMelody();
+    }
+  }, totalDuration);
+}
 
 export function startBgMusic() {
   if (bgPlaying) return;
   const ac = getCtx();
 
   bgGain = ac.createGain();
-  bgGain.gain.value = muted ? 0 : 0.08;
+  bgGain.gain.value = muted ? 0 : 1.0;
   bgGain.connect(ac.destination);
 
-  // Chord: soft pad with slow detuning
-  const notes = [261.63, 329.63, 392.0, 523.25]; // C4, E4, G4, C5
-  const types = ['sine', 'sine', 'triangle', 'sine'];
-
-  notes.forEach((freq, i) => {
-    const osc = ac.createOscillator();
-    osc.type = types[i];
-    osc.frequency.value = freq;
-
-    // Slow vibrato
-    const lfo = ac.createOscillator();
-    lfo.frequency.value = 0.15 + i * 0.05;
-    const lfoGain = ac.createGain();
-    lfoGain.gain.value = 2 + i;
-    lfo.connect(lfoGain);
-    lfoGain.connect(osc.frequency);
-    lfo.start();
-
-    // Per-voice gain (lower for higher notes)
-    const voiceGain = ac.createGain();
-    voiceGain.gain.value = 0.25 - i * 0.04;
-    osc.connect(voiceGain);
-    voiceGain.connect(bgGain);
-
-    osc.start();
-    bgOscillators.push({ osc, lfo, voiceGain, lfoGain });
-  });
-
-  // Add a slow evolving bass note
-  const bassOsc = ac.createOscillator();
-  bassOsc.type = 'sine';
-  bassOsc.frequency.value = 130.81; // C3
-  const bassGain = ac.createGain();
-  bassGain.gain.value = 0.15;
-  bassOsc.connect(bassGain);
-  bassGain.connect(bgGain);
-
-  const bassLfo = ac.createOscillator();
-  bassLfo.frequency.value = 0.08;
-  const bassLfoGain = ac.createGain();
-  bassLfoGain.gain.value = 1.5;
-  bassLfo.connect(bassLfoGain);
-  bassLfoGain.connect(bassOsc.frequency);
-  bassLfo.start();
-  bassOsc.start();
-  bgOscillators.push({ osc: bassOsc, lfo: bassLfo, voiceGain: bassGain, lfoGain: bassLfoGain });
-
   bgPlaying = true;
-
-  // Chord progression: shift notes every 8 seconds
-  scheduleChordChange(ac);
-}
-
-function scheduleChordChange(ac) {
-  const progressions = [
-    [261.63, 329.63, 392.0, 523.25],   // C major
-    [220.0, 277.18, 329.63, 440.0],     // A minor
-    [246.94, 311.13, 369.99, 493.88],   // B dim-ish (dreamy)
-    [196.0, 246.94, 293.66, 392.0],     // G major
-  ];
-
-  let chordIdx = 0;
-
-  setInterval(() => {
-    chordIdx = (chordIdx + 1) % progressions.length;
-    const chord = progressions[chordIdx];
-
-    bgOscillators.forEach((voice, i) => {
-      if (i < chord.length && voice.osc) {
-        const ac2 = getCtx();
-        voice.osc.frequency.setTargetAtTime(chord[i], ac2.currentTime, 2.0);
-      }
-    });
-  }, 8000);
+  scheduleMelody();
 }
 
 // --- Sound effects ---
@@ -106,21 +109,21 @@ export function playCollectSound() {
   const ac = getCtx();
   const now = ac.currentTime;
 
-  // Bright sparkle: quick ascending notes
-  [800, 1000, 1200, 1600].forEach((freq, i) => {
+  // Happy ascending sparkle
+  [C5, E5, G4 * 2, C5 * 2].forEach((freq, i) => {
     const osc = ac.createOscillator();
-    osc.type = 'sine';
+    osc.type = 'triangle';
     osc.frequency.value = freq;
 
     const gain = ac.createGain();
-    gain.gain.setValueAtTime(0, now + i * 0.06);
-    gain.gain.linearRampToValueAtTime(0.12, now + i * 0.06 + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.2);
+    gain.gain.setValueAtTime(0, now + i * 0.08);
+    gain.gain.linearRampToValueAtTime(0.1, now + i * 0.08 + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.25);
 
     osc.connect(gain);
     gain.connect(ac.destination);
-    osc.start(now + i * 0.06);
-    osc.stop(now + i * 0.06 + 0.3);
+    osc.start(now + i * 0.08);
+    osc.stop(now + i * 0.08 + 0.3);
   });
 }
 
@@ -129,29 +132,22 @@ export function playTransitionSound() {
   const ac = getCtx();
   const now = ac.currentTime;
 
-  // Whoosh: filtered noise sweep
+  // Gentle whoosh with rising pitch
   const osc = ac.createOscillator();
-  osc.type = 'sawtooth';
-  osc.frequency.setValueAtTime(200, now);
-  osc.frequency.exponentialRampToValueAtTime(600, now + 0.3);
-  osc.frequency.exponentialRampToValueAtTime(100, now + 0.6);
-
-  const filter = ac.createBiquadFilter();
-  filter.type = 'lowpass';
-  filter.frequency.setValueAtTime(300, now);
-  filter.frequency.linearRampToValueAtTime(2000, now + 0.3);
-  filter.frequency.linearRampToValueAtTime(200, now + 0.6);
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(300, now);
+  osc.frequency.exponentialRampToValueAtTime(600, now + 0.2);
+  osc.frequency.exponentialRampToValueAtTime(200, now + 0.4);
 
   const gain = ac.createGain();
   gain.gain.setValueAtTime(0, now);
-  gain.gain.linearRampToValueAtTime(0.06, now + 0.1);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+  gain.gain.linearRampToValueAtTime(0.06, now + 0.08);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
 
-  osc.connect(filter);
-  filter.connect(gain);
+  osc.connect(gain);
   gain.connect(ac.destination);
   osc.start(now);
-  osc.stop(now + 0.7);
+  osc.stop(now + 0.5);
 }
 
 export function playDialogueBlip() {
@@ -159,18 +155,19 @@ export function playDialogueBlip() {
   const ac = getCtx();
   const now = ac.currentTime;
 
+  // Soft pluck sound
   const osc = ac.createOscillator();
-  osc.type = 'square';
-  osc.frequency.value = 600 + Math.random() * 200;
+  osc.type = 'triangle';
+  osc.frequency.value = 800 + Math.random() * 400;
 
   const gain = ac.createGain();
-  gain.gain.setValueAtTime(0.04, now);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+  gain.gain.setValueAtTime(0.03, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
 
   osc.connect(gain);
   gain.connect(ac.destination);
   osc.start(now);
-  osc.stop(now + 0.08);
+  osc.stop(now + 0.07);
 }
 
 // --- Mute toggle ---
@@ -178,7 +175,12 @@ export function playDialogueBlip() {
 export function toggleMute() {
   muted = !muted;
   if (bgGain) {
-    bgGain.gain.setTargetAtTime(muted ? 0 : 0.08, getCtx().currentTime, 0.3);
+    bgGain.gain.setTargetAtTime(muted ? 0 : 1.0, getCtx().currentTime, 0.3);
+  }
+  if (!muted && bgPlaying) {
+    // Restart melody scheduling if it stopped
+    if (melodyTimeout) clearTimeout(melodyTimeout);
+    scheduleMelody();
   }
   return muted;
 }

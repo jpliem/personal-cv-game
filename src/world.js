@@ -96,6 +96,67 @@ export function buildPath(scene) {
   }
 }
 
+export function buildSideQuestAreas(scene) {
+  ZONES.forEach((zone) => {
+    if (!zone.sideQuests || zone.sideQuests.length === 0) return;
+
+    zone.sideQuests.forEach((sq) => {
+      const wx = zone.position.x + sq.offset.x;
+      const wz = zone.position.z + sq.offset.z;
+
+      // Small platform
+      const platMat = new THREE.MeshPhongMaterial({ color: sq.color, flatShading: true });
+      const plat = new THREE.Mesh(new THREE.BoxGeometry(5, 0.6, 5), platMat);
+      plat.position.set(wx, -0.3, wz);
+      scene.add(plat);
+
+      // Platform border
+      const borderMat = new THREE.MeshPhongMaterial({
+        color: new THREE.Color(sq.color).multiplyScalar(0.7),
+        flatShading: true,
+      });
+      const border = new THREE.Mesh(new THREE.BoxGeometry(5.6, 0.3, 5.6), borderMat);
+      border.position.set(wx, -0.8, wz);
+      scene.add(border);
+
+      // Small marker block (icon stand)
+      const markerMat = new THREE.MeshPhongMaterial({
+        color: sq.color,
+        emissive: sq.color,
+        emissiveIntensity: 0.3,
+        flatShading: true,
+      });
+      const marker = new THREE.Mesh(new THREE.BoxGeometry(1, 2, 1), markerMat);
+      marker.position.set(wx, 1, wz);
+      scene.add(marker);
+
+      const topBlock = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.3, 1.3), markerMat);
+      topBlock.position.set(wx, 2.15, wz);
+      scene.add(topBlock);
+
+      // Connecting path from parent zone to side quest
+      const fromX = zone.position.x;
+      const fromZ = zone.position.z;
+      const dx = wx - fromX;
+      const dz = wz - fromZ;
+      const dist = Math.sqrt(dx * dx + dz * dz);
+      const angle = Math.atan2(dz, dx);
+      const pathMat = new THREE.MeshPhongMaterial({ color: sq.color, flatShading: true, transparent: true, opacity: 0.6 });
+
+      const steps = Math.floor(dist / 1.2);
+      for (let s = 2; s < steps - 1; s++) {
+        const t = s / steps;
+        const px = fromX + dx * t;
+        const pz = fromZ + dz * t;
+        const block = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.15, 0.4), pathMat);
+        block.position.set(px, 0, pz);
+        block.rotation.y = -angle;
+        scene.add(block);
+      }
+    });
+  });
+}
+
 export function buildSkyParticles(scene) {
   const particles = [];
   const colors = [0xfbbf24, 0xa78bfa, 0x4ade80, 0x60a5fa, 0xf472b6, 0xffffff];

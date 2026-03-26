@@ -15,6 +15,7 @@ const LOGO_DATA = {
 };
 
 export function createLabels() {
+  // Main zone labels
   ZONES.forEach((zone, i) => {
     const logo = LOGO_DATA[zone.id] || {};
     const el = document.createElement('div');
@@ -24,19 +25,36 @@ export function createLabels() {
       ${logo.text ? `<div class="zone-label-text" style="color:${logo.color}">${logo.text}</div>` : ''}
       <div class="zone-label-period">${zone.period || ''}</div>
     `;
-    el.style.setProperty('--label-color', logo.color);
     container.appendChild(el);
-    labelElements.push({ el, zoneIndex: i });
+    labelElements.push({ el, worldX: zone.position.x, worldZ: zone.position.z, height: 9 });
+  });
+
+  // Side quest labels (smaller)
+  ZONES.forEach((zone) => {
+    if (!zone.sideQuests) return;
+    zone.sideQuests.forEach((sq) => {
+      const el = document.createElement('div');
+      el.className = 'zone-label sq-label';
+      el.innerHTML = `
+        <div class="zone-label-emoji" style="font-size:22px">${sq.emoji}</div>
+        <div class="sq-label-name">${sq.name}</div>
+      `;
+      container.appendChild(el);
+      labelElements.push({
+        el,
+        worldX: zone.position.x + sq.offset.x,
+        worldZ: zone.position.z + sq.offset.z,
+        height: 4,
+      });
+    });
   });
 }
 
 export function updateLabels(camera) {
   const vec = new THREE.Vector3();
 
-  labelElements.forEach(({ el, zoneIndex }) => {
-    const zone = ZONES[zoneIndex];
-    // Position label above the building
-    vec.set(zone.position.x, 8, zone.position.z);
+  labelElements.forEach(({ el, worldX, worldZ, height }) => {
+    vec.set(worldX, height, worldZ);
     vec.project(camera);
 
     const x = ((vec.x + 1) / 2) * window.innerWidth;
@@ -45,7 +63,7 @@ export function updateLabels(camera) {
     el.style.left = `${x}px`;
     el.style.top = `${y}px`;
 
-    // Fade based on distance from center of screen
+    // Fade based on distance from screen center
     const dx = x - window.innerWidth / 2;
     const dy = y - window.innerHeight / 2;
     const dist = Math.sqrt(dx * dx + dy * dy);

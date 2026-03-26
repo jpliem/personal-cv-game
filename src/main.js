@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 import { ZONES, TOTAL_COLLECTIBLES } from './data.js';
-import { buildGround, buildPath, buildSkyParticles, updateParticles } from './world.js';
+import { buildGround, buildPath, buildSideQuestAreas, buildSkyParticles, updateParticles } from './world.js';
 import { buildZones } from './zones.js';
 import { navigateToZone, goNext, goPrev, updateNavigation, isNavigating } from './navigation.js';
 import { buildCollectibles, updateCollectibles, handleCollectibleClick } from './collectibles.js';
@@ -9,6 +9,7 @@ import { initHUD } from './hud.js';
 import { showDialogue, advanceDialogue, isDialogueActive } from './dialogue.js';
 import { createLabels, updateLabels } from './labels.js';
 import { startBgMusic, playCollectSound, playTransitionSound, toggleMute } from './audio.js';
+import { updateSideQuests, hideSideQuests } from './sidequests.js';
 
 // --- Renderer ---
 const canvas = document.getElementById('game-canvas');
@@ -51,6 +52,7 @@ ZONES.forEach((zone) => {
 buildGround(scene);
 buildPath(scene);
 const zoneGroups = buildZones(scene);
+buildSideQuestAreas(scene);
 const particles = buildSkyParticles(scene);
 buildCollectibles(scene);
 
@@ -111,7 +113,14 @@ function onZoneArrive(index) {
   // Auto-show dialogue on first visit
   if (!dialogueShown.has(index)) {
     dialogueShown.add(index);
-    setTimeout(() => showDialogue(index), 800);
+    hideSideQuests();
+    setTimeout(() => showDialogue(index, () => {
+      // Show side quests after main dialogue ends
+      updateSideQuests();
+    }), 800);
+  } else {
+    // Already visited — show side quests immediately
+    updateSideQuests();
   }
 }
 
@@ -150,6 +159,7 @@ document.getElementById('nav-prev').addEventListener('click', (e) => {
   e.stopPropagation();
   ensureMusic();
   if (isDialogueActive()) return;
+  hideSideQuests();
   playTransitionSound();
   goPrev(onZoneArrive);
 });
@@ -158,6 +168,7 @@ document.getElementById('nav-next').addEventListener('click', (e) => {
   e.stopPropagation();
   ensureMusic();
   if (isDialogueActive()) return;
+  hideSideQuests();
   playTransitionSound();
   goNext(onZoneArrive);
 });
@@ -167,6 +178,7 @@ document.querySelectorAll('.nav-zone').forEach((btn) => {
     e.stopPropagation();
     ensureMusic();
     if (isDialogueActive()) return;
+    hideSideQuests();
     playTransitionSound();
     const idx = parseInt(btn.dataset.zone, 10);
     navigateToZone(idx, onZoneArrive);
@@ -215,9 +227,11 @@ window.addEventListener('keydown', (event) => {
   ensureMusic();
 
   if (event.key === 'ArrowRight' || event.key === 'd') {
+    hideSideQuests();
     playTransitionSound();
     goNext(onZoneArrive);
   } else if (event.key === 'ArrowLeft' || event.key === 'a') {
+    hideSideQuests();
     playTransitionSound();
     goPrev(onZoneArrive);
   }

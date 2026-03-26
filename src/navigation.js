@@ -1,4 +1,5 @@
 import { ZONES } from './data.js';
+import { getSideQuestCameraTarget } from './sidequests.js';
 
 let currentZoneIndex = 0;
 let targetZoneIndex = 0;
@@ -52,34 +53,50 @@ export function goPrev(onArrive) {
   navigateToZone(currentZoneIndex - 1, onArrive);
 }
 
-// Called every frame — returns hop height for player Y
+// Called every frame
 export function updateNavigation(camera, playerGroup) {
   const speed = 0.04;
 
+  // Check for side quest camera override
+  const sqTarget = getSideQuestCameraTarget();
+  let activeCamX = cameraTarget.x;
+  let activeCamZ = cameraTarget.z;
+  let activeLookX = lookTarget.x;
+  let activeLookZ = lookTarget.z;
+  let activePlayerX = playerTarget.x;
+  let activePlayerZ = playerTarget.z;
+
+  if (sqTarget) {
+    activeCamX = sqTarget.x + 20;
+    activeCamZ = sqTarget.z + 20;
+    activeLookX = sqTarget.x;
+    activeLookZ = sqTarget.z;
+    activePlayerX = sqTarget.x;
+    activePlayerZ = sqTarget.z + 3;
+  }
+
   // Calculate distance to target
-  const dx = playerTarget.x - playerGroup.position.x;
-  const dz = playerTarget.z - playerGroup.position.z;
+  const dx = activePlayerX - playerGroup.position.x;
+  const dz = activePlayerZ - playerGroup.position.z;
   const dist = Math.sqrt(dx * dx + dz * dz);
 
   // Lerp camera
-  camera.position.x += (cameraTarget.x - camera.position.x) * speed;
+  camera.position.x += (activeCamX - camera.position.x) * speed;
   camera.position.y += (cameraTarget.y - camera.position.y) * speed;
-  camera.position.z += (cameraTarget.z - camera.position.z) * speed;
+  camera.position.z += (activeCamZ - camera.position.z) * speed;
 
   // Lerp lookAt
-  currentLook.x += (lookTarget.x - currentLook.x) * speed;
-  currentLook.z += (lookTarget.z - currentLook.z) * speed;
+  currentLook.x += (activeLookX - currentLook.x) * speed;
+  currentLook.z += (activeLookZ - currentLook.z) * speed;
   camera.lookAt(currentLook.x, currentLook.y, currentLook.z);
 
-  // Lerp player X/Z
+  // Lerp player
   playerGroup.position.x += dx * speed;
   playerGroup.position.z += dz * speed;
 
-  // Check if arrived
   if (dist < 0.1 && isMoving) {
     isMoving = false;
   }
 
-  // Return movement distance for hop animation
   return dist;
 }
