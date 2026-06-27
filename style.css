@@ -85,7 +85,6 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
 .dot-nav__item:hover .dot-nav__dot{ background:var(--ink); }
 .dot-nav__item:hover .dot-nav__text{ opacity:1; transform:translateX(0); }
 .dot-nav__item.is-active .dot-nav__dot{ background:var(--accent); transform:scale(1.35); }
-.dot-nav__item.is-active .dot-nav__text{ opacity:1; transform:translateX(0); color:var(--ink); }
 @media(max-width:900px){ .dot-nav{ display:none; } }
 
 /* ---------- Layout ---------- */
