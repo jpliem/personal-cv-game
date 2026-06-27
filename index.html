@@ -3,122 +3,481 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jonathan Putra — Career Journey</title>
+  <meta name="description" content="Jonathan Putra — Technical Program Manager. Building and governing the systems that run enterprises: ERP modernization, AI agent fleets, IoT products, and cybersecurity." />
+  <meta name="theme-color" content="#F4F1EA" />
+  <title>Jonathan Putra — Technical Program Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <canvas id="game-canvas"></canvas>
 
-  <!-- HUD: Top-left logo + zone name -->
-  <div id="hud-top-left">
-    <div id="hud-logo">JONATHAN PUTRA</div>
-    <div id="hud-zone-name">BINUS — Campus</div>
-  </div>
+  <!-- Scroll progress -->
+  <div class="scroll-progress" aria-hidden="true"><span id="scroll-bar"></span></div>
 
-  <!-- HUD: Top-right buttons -->
-  <div id="hud-top-right">
-    <span id="hud-gem-icon">⭐</span>
-    <span id="hud-counter">0 / 17 discovered</span>
-  </div>
+  <!-- Side nav dots -->
+  <nav class="dot-nav" aria-label="Section navigation">
+    <a href="#hero" class="dot-nav__item is-active"><span class="dot-nav__dot"></span><span class="dot-nav__text">Intro</span></a>
+    <a href="#about" class="dot-nav__item"><span class="dot-nav__dot"></span><span class="dot-nav__text">About</span></a>
+    <a href="#experience" class="dot-nav__item"><span class="dot-nav__dot"></span><span class="dot-nav__text">Work</span></a>
+    <a href="#capabilities" class="dot-nav__item"><span class="dot-nav__dot"></span><span class="dot-nav__text">Skills</span></a>
+    <a href="#projects" class="dot-nav__item"><span class="dot-nav__dot"></span><span class="dot-nav__text">Projects</span></a>
+    <a href="#writing" class="dot-nav__item"><span class="dot-nav__dot"></span><span class="dot-nav__text">Writing</span></a>
+    <a href="#beyond" class="dot-nav__item"><span class="dot-nav__dot"></span><span class="dot-nav__text">Beyond</span></a>
+    <a href="#contact" class="dot-nav__item"><span class="dot-nav__dot"></span><span class="dot-nav__text">Contact</span></a>
+  </nav>
 
-  <div id="hud-buttons">
-    <button id="mute-btn" title="Toggle sound">&#x1F50A;</button>
-    <button id="menu-btn" title="Menu">&#9776;</button>
-  </div>
-
-  <!-- HUD: Bottom nav bar -->
-  <div id="hud-bottom-nav">
-    <button id="nav-prev" class="nav-arrow">&larr;</button>
-    <div id="nav-zones">
-      <button class="nav-zone active" data-zone="0">Kid</button>
-      <span class="nav-path-line"></span>
-      <button class="nav-zone" data-zone="1">BINUS</button>
-      <span class="nav-path-line"></span>
-      <button class="nav-zone" data-zone="2">BCA</button>
-      <span class="nav-path-line"></span>
-      <button class="nav-zone" data-zone="3">EY</button>
-      <span class="nav-path-line"></span>
-      <button class="nav-zone" data-zone="4">Blibli</button>
-      <span class="nav-path-line"></span>
-      <button class="nav-zone" data-zone="5">GSPE</button>
-      <span class="nav-path-line"></span>
-      <button class="nav-zone" data-zone="6">Next?</button>
+  <!-- Top bar -->
+  <header class="topbar">
+    <a href="#hero" class="brand" data-magnetic>
+      <span class="brand__mark">JP</span>
+      <span class="brand__name">Jonathan Putra</span>
+    </a>
+    <div class="topbar__meta">
+      <span class="status-dot"></span>
+      <span>Open to opportunities</span>
     </div>
-    <button id="nav-next" class="nav-arrow">&rarr;</button>
-  </div>
+  </header>
 
-  <!-- HUD: Right stats panel -->
-  <button id="stats-toggle">&#9776; Stats</button>
-  <div id="stats-panel" class="hidden">
-    <button id="stats-close">&times;</button>
-    <div id="stats-player-card"></div>
-    <div id="stats-skills"></div>
-    <div id="stats-badges"></div>
-  </div>
+  <main id="scroll-wrap">
 
-  <!-- Menu / Credits overlay -->
-  <div id="menu-overlay" class="hidden">
-    <div id="menu-card">
-      <h2>Menu</h2>
-      <button id="menu-resume" class="menu-option">Resume</button>
-      <button id="menu-restart" class="menu-option">Restart Journey</button>
-      <div id="credits">
-        <h3>Credits</h3>
-        <div class="credit-line">Design & Content: Jonathan Putra</div>
-        <div class="credit-line">Built with: Three.js, Vite</div>
-        <div class="credit-line">Animation: @tweenjs/tween.js</div>
-        <div class="credit-line">Audio: Web Audio API (procedural)</div>
-        <div class="credit-line">Font: Press Start 2P (Google Fonts)</div>
-        <div class="credit-line">Assisted by: Claude (Anthropic)</div>
+    <!-- ============ HERO ============ -->
+    <section id="hero" class="hero" data-section>
+      <div class="hero__grid">
+        <div class="hero__lede-block">
+          <p class="eyebrow reveal"><span class="eyebrow__line"></span>Technical Program Manager · Jakarta</p>
+          <h1 class="hero__title">
+            <span class="line"><span class="word">Jonathan</span></span>
+            <span class="line"><span class="word">Putra.</span></span>
+          </h1>
+          <p class="hero__role reveal">I build &amp; govern the systems that run enterprises.</p>
+          <p class="hero__intro reveal">
+            Four years driving multi-team delivery across 17+ enterprise systems, an AI prototyping
+            program, an IoT product line, and a governance framework for autonomous coding agents —
+            comfortable between the boardroom and the build pipeline.
+          </p>
+          <div class="hero__cta reveal">
+            <a href="#projects" class="btn btn--primary" data-magnetic><span>Selected work</span><i class="btn__arrow">→</i></a>
+            <a href="#contact" class="btn btn--ghost" data-magnetic>Get in touch</a>
+          </div>
+        </div>
+
+        <figure class="hero__portrait reveal">
+          <div class="frame frame--portrait" data-depth="0.05">
+            <img src="/assets/photo1.jpg" alt="Portrait of Jonathan Putra" onerror="this.remove()" />
+          </div>
+          <figcaption>Jakarta · 2026</figcaption>
+        </figure>
       </div>
-      <button id="menu-close" class="menu-close-btn">&times;</button>
+
+      <div class="hero__stats">
+        <div class="stat reveal"><span class="stat__num" data-count="4" data-suffix="+">0</span><span class="stat__label">Years driving delivery</span></div>
+        <div class="stat reveal"><span class="stat__num" data-count="17" data-suffix="+">0</span><span class="stat__label">Enterprise systems</span></div>
+        <div class="stat reveal"><span class="stat__num" data-count="9">0</span><span class="stat__label">Departments served</span></div>
+        <div class="stat reveal"><span class="stat__num" data-count="10" data-prefix="~">0</span><span class="stat__label">AI prototypes shipped</span></div>
+      </div>
+
+      <a href="#about" class="scroll-cue" aria-label="Scroll to about">
+        <span class="scroll-cue__text">Scroll</span>
+        <span class="scroll-cue__line"></span>
+      </a>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>ERP Modernization</span><span class="marquee__dot">/</span>
+        <span>AI Agent Governance</span><span class="marquee__dot">/</span>
+        <span>IoT &amp; Smart Factory</span><span class="marquee__dot">/</span>
+        <span>NIST CSF · ISO 27001</span><span class="marquee__dot">/</span>
+        <span>Computer Vision</span><span class="marquee__dot">/</span>
+        <span>RAG Systems</span><span class="marquee__dot">/</span>
+        <span>ERP Modernization</span><span class="marquee__dot">/</span>
+        <span>AI Agent Governance</span><span class="marquee__dot">/</span>
+        <span>IoT &amp; Smart Factory</span><span class="marquee__dot">/</span>
+        <span>NIST CSF · ISO 27001</span><span class="marquee__dot">/</span>
+        <span>Computer Vision</span><span class="marquee__dot">/</span>
+        <span>RAG Systems</span><span class="marquee__dot">/</span>
+      </div>
     </div>
-  </div>
 
-  <!-- Zone labels (floating logos) -->
-  <div id="zone-labels"></div>
+    <!-- ============ ABOUT ============ -->
+    <section id="about" class="section about" data-section>
+      <div class="section__head reveal">
+        <span class="section__index">01 <i class="section__of">/ 06</i></span>
+        <h2 class="section__title">The short version</h2>
+      </div>
+      <div class="about__grid">
+        <div class="about__copy">
+          <p class="about__big reveal">
+            Technical Program Manager with 4+ years driving multi-team delivery across
+            <mark>enterprise systems</mark>, <mark>AI operations</mark>, and <mark>IT governance</mark>.
+          </p>
+          <p class="about__text reveal">
+            Currently overseeing execution across 17+ enterprise systems serving 9 business departments at GSPE —
+            running ERP modernization, an AI prototyping program, an IoT product line, and an internal governance
+            framework for autonomous AI coding agents. A Big-4 consulting and cybersecurity-audit background brings
+            risk-led program discipline and cross-functional stakeholder fluency.
+          </p>
+          <p class="about__text reveal">
+            I sit comfortably between the boardroom and the build pipeline — translating strategy into shipped
+            systems, and shipping systems back into defensible governance.
+          </p>
+        </div>
+        <aside class="about__card panel reveal">
+          <div class="about__portrait frame frame--avatar"><span>JP</span></div>
+          <dl class="about__facts">
+            <div><dt>Based in</dt><dd>Jakarta, Indonesia</dd></div>
+            <div><dt>Focus</dt><dd>Program delivery · AI · Governance</dd></div>
+            <div><dt>Languages</dt><dd>EN (C1 / IELTS 8.0) · ID (native)</dd></div>
+            <div><dt>Education</dt><dd>B.CompSci, BINUS · GPA 3.63</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </section>
 
-  <!-- Contact card (shown at final zone) -->
-  <div id="contact-card" class="hidden">
-    <h2 id="contact-title">Let's Connect!</h2>
-    <div class="contact-links">
-      <a href="mailto:jonathanputra23@gmail.com" class="contact-link">
-        <span class="contact-icon">&#9993;</span> jonathanputra23@gmail.com
-      </a>
-      <a href="https://linkedin.com/in/jonathan-putra/" target="_blank" class="contact-link">
-        <span class="contact-icon">in</span> linkedin.com/in/jonathan-putra
-      </a>
-    </div>
-    <div class="contact-articles">
-      <h3 class="articles-title">Published Work</h3>
-      <a href="https://ieeexplore.ieee.org/document/9915133" target="_blank" class="contact-link">
-        <span class="contact-icon">&#128196;</span> IEEE: Autonomous Drone Indoor Navigation
-      </a>
-      <a href="https://medium.com/generative-ai/the-plan-approve-execute-pattern-for-asynchronous-ai-development-2c1db9fa08b1" target="_blank" class="contact-link">
-        <span class="contact-icon">&#9997;</span> Medium: Plan-Approve-Execute Pattern for AI Dev
-      </a>
-      <a href="https://www.ioteknologi.com/" target="_blank" class="contact-link">
-        <span class="contact-icon">&#128225;</span> NexaBrick IoT Product (ioteknologi.com)
-      </a>
-    </div>
-    <button id="reset-btn">Play Again from the Beginning</button>
-  </div>
+    <hr class="rule" />
 
-  <!-- Side quests -->
-  <div id="side-quests" class="hidden"></div>
+    <!-- ============ EXPERIENCE TIMELINE ============ -->
+    <section id="experience" class="section experience" data-section>
+      <div class="section__head reveal">
+        <span class="section__index">02 <i class="section__of">/ 06</i></span>
+        <h2 class="section__title">Experience</h2>
+        <p class="section__sub">A non-linear path that turned out to be a strategy.</p>
+      </div>
 
-  <!-- Dialogue box -->
-  <div id="dialogue-box" class="hidden">
-    <div id="dialogue-speaker"></div>
-    <div id="dialogue-text"></div>
-    <div id="dialogue-hint">Click to continue...</div>
-  </div>
+      <div class="timeline">
+        <div class="timeline__bar"><span class="timeline__fill" id="timeline-fill"></span></div>
 
-  <!-- Tooltip (positioned dynamically) -->
-  <div id="tooltip" class="hidden">
-    <div id="tooltip-text"></div>
-  </div>
+        <article class="tl-item reveal" data-stagger>
+          <div class="tl-item__node"><span></span></div>
+          <div class="tl-item__period">2025 — Present</div>
+          <div class="tl-item__card panel tilt">
+            <div class="tl-item__head">
+              <h3>Technical Program Manager <span class="tl-item__role">/ IT Manager</span></h3>
+              <div class="tl-item__co">Graha Sumber Prima Elektronik · GSPE</div>
+            </div>
+            <ul class="tl-item__list">
+              <li><b>Program delivery &amp; governance</b> — built a Request Management System (Next.js/Supabase) governing all engineering work across 17+ systems; authored the intake, prioritization &amp; execution standards.</li>
+              <li><b>AI program</b> — ran an R&amp;D pipeline delivering ~10 production-tested prototypes: CCTV activity detection (YOLO), SAM3 auto-labeling, OCR/schematic parsing, RAG systems, a production-line digital twin, and an AI tender-document processor.</li>
+              <li><b>ERP modernization</b> — drove multi-team migration to containerized environments; standardized the stack on .NET, Vue.js, PostgreSQL, Docker.</li>
+              <li><b>IoT product line (NexaBrick)</b> — owned commercial execution: pitching, scoping, pricing, sales collateral.</li>
+              <li><b>Automation</b> — led n8n rollout replacing manual processes across HR, CRM, and admin reporting.</li>
+            </ul>
+            <div class="tl-item__tags"><span>.NET</span><span>Vue.js</span><span>Next.js</span><span>Docker</span><span>YOLO</span><span>RAG</span><span>n8n</span></div>
+          </div>
+        </article>
 
-  <script type="module" src="/src/main.js"></script>
+        <article class="tl-item reveal" data-stagger>
+          <div class="tl-item__node"><span></span></div>
+          <div class="tl-item__period">2024 — 2025</div>
+          <div class="tl-item__card panel tilt">
+            <div class="tl-item__head">
+              <h3>Senior IT Internal Audit Officer</h3>
+              <div class="tl-item__co">Blibli · Jakarta</div>
+            </div>
+            <ul class="tl-item__list">
+              <li>Led the cybersecurity audit program (ransomware readiness, network infiltration, lateral movement, data exfiltration) for a major Indonesian e-commerce platform, benchmarked to <b>NIST CSF</b> and <b>ISO 27001</b>.</li>
+              <li>Ran a data-governance maturity assessment against Indonesian <b>UU PDP</b> (GDPR-aligned); produced a prioritized remediation roadmap.</li>
+            </ul>
+            <div class="tl-item__tags"><span>NIST CSF</span><span>ISO 27001</span><span>UU PDP</span><span>Risk Assessment</span></div>
+          </div>
+        </article>
+
+        <article class="tl-item reveal" data-stagger>
+          <div class="tl-item__node"><span></span></div>
+          <div class="tl-item__period">2022 — 2024</div>
+          <div class="tl-item__card panel tilt">
+            <div class="tl-item__head">
+              <h3>Associate Consultant</h3>
+              <div class="tl-item__co">Ernst &amp; Young · EY · Jakarta</div>
+            </div>
+            <ul class="tl-item__list">
+              <li><b>Cloud migration (health insurance):</b> on-prem → Azure Data Cloud; authored data-integrity validation scripts across migration waves.</li>
+              <li><b>IT strategy (state-owned bank):</b> co-developed a 5-year IT strategy with capability-gap assessment &amp; upskilling roadmap.</li>
+              <li><b>Bank separation (Australian multinational):</b> BA &amp; PMO for the technology &amp; data workstream during M&amp;A-driven separation.</li>
+              <li><b>Data center strategy (state-owned bank):</b> infrastructure evaluation &amp; capacity planning.</li>
+            </ul>
+            <div class="tl-item__tags"><span>Azure</span><span>IT Strategy</span><span>M&amp;A</span><span>PMO</span></div>
+          </div>
+        </article>
+
+        <article class="tl-item reveal" data-stagger>
+          <div class="tl-item__node"><span></span></div>
+          <div class="tl-item__period">2021 — 2022</div>
+          <div class="tl-item__card panel tilt">
+            <div class="tl-item__head">
+              <h3>Software Quality Assurance Intern</h3>
+              <div class="tl-item__co">Bank Central Asia · BCA</div>
+            </div>
+            <ul class="tl-item__list">
+              <li>Manual &amp; automated API testing for transactional banking systems (Postman, SoapUI, JMeter).</li>
+              <li>Built automation tooling to validate API migrations across versions — handling real money flows.</li>
+            </ul>
+            <div class="tl-item__tags"><span>Postman</span><span>SoapUI</span><span>JMeter</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- ============ CAPABILITIES ============ -->
+    <section id="capabilities" class="section caps" data-section>
+      <div class="section__head reveal">
+        <span class="section__index">03 <i class="section__of">/ 06</i></span>
+        <h2 class="section__title">Capabilities</h2>
+        <p class="section__sub">Where strategy, governance, and engineering overlap.</p>
+      </div>
+
+      <div class="caps__grid">
+        <div class="cap panel tilt reveal">
+          <div class="cap__num">a</div>
+          <h3>Program &amp; Delivery</h3>
+          <p>Cross-functional execution, dependency management, risk-driven planning, RAID tracking, vendor management.</p>
+          <div class="cap__bars">
+            <div class="bar"><span class="bar__label">Program execution</span><span class="bar__track"><i data-level="0.95"></i></span></div>
+            <div class="bar"><span class="bar__label">Stakeholder mgmt</span><span class="bar__track"><i data-level="0.9"></i></span></div>
+            <div class="bar"><span class="bar__label">Process design</span><span class="bar__track"><i data-level="0.88"></i></span></div>
+          </div>
+        </div>
+
+        <div class="cap panel tilt reveal">
+          <div class="cap__num">b</div>
+          <h3>Governance &amp; Audit</h3>
+          <p>ISO 27001, NIST CSF, data governance (UU PDP / GDPR-aligned), IT audit, risk assessment, IT strategy.</p>
+          <div class="cap__bars">
+            <div class="bar"><span class="bar__label">IT audit</span><span class="bar__track"><i data-level="0.9"></i></span></div>
+            <div class="bar"><span class="bar__label">Risk assessment</span><span class="bar__track"><i data-level="0.86"></i></span></div>
+            <div class="bar"><span class="bar__label">Data governance</span><span class="bar__track"><i data-level="0.82"></i></span></div>
+          </div>
+        </div>
+
+        <div class="cap panel tilt reveal">
+          <div class="cap__num">c</div>
+          <h3>Engineering Depth</h3>
+          <p>.NET / C#, Vue.js, Next.js, Node.js, PostgreSQL, Docker, microservices, Azure, CI/CD (GitHub Actions).</p>
+          <div class="cap__bars">
+            <div class="bar"><span class="bar__label">Backend / .NET</span><span class="bar__track"><i data-level="0.85"></i></span></div>
+            <div class="bar"><span class="bar__label">Frontend / Vue·Next</span><span class="bar__track"><i data-level="0.82"></i></span></div>
+            <div class="bar"><span class="bar__label">DevOps / Docker</span><span class="bar__track"><i data-level="0.8"></i></span></div>
+          </div>
+        </div>
+
+        <div class="cap panel tilt reveal">
+          <div class="cap__num">d</div>
+          <h3>AI &amp; Automation</h3>
+          <p>RAG systems, computer vision (OpenCV, YOLO), n8n automation, autonomous AI coding agents (Claude Code, Jules).</p>
+          <div class="cap__bars">
+            <div class="bar"><span class="bar__label">AI prototyping</span><span class="bar__track"><i data-level="0.85"></i></span></div>
+            <div class="bar"><span class="bar__label">Computer vision</span><span class="bar__track"><i data-level="0.78"></i></span></div>
+            <div class="bar"><span class="bar__label">Automation</span><span class="bar__track"><i data-level="0.9"></i></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="caps__chips reveal" aria-label="Toolbelt">
+        <span>Jira</span><span>Confluence</span><span>Notion</span><span>Supabase</span>
+        <span>Postman</span><span>SoapUI</span><span>JMeter</span><span>PostgreSQL</span>
+        <span>Linux</span><span>Git</span><span>GitHub Actions</span><span>Azure</span>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- ============ PROJECTS ============ -->
+    <section id="projects" class="section projects" data-section>
+      <div class="section__head reveal">
+        <span class="section__index">04 <i class="section__of">/ 06</i></span>
+        <h2 class="section__title">Selected Work</h2>
+        <p class="section__sub">Things I build when curiosity gets the better of me.</p>
+      </div>
+
+      <div class="projects__grid">
+
+        <article class="proj panel tilt reveal">
+          <div class="proj__top">
+            <span class="proj__num">01</span>
+            <span class="proj__year">2026 · ongoing</span>
+          </div>
+          <h3 class="proj__title">DeepTalk</h3>
+          <p class="proj__desc">Real-time meeting assistant: live speech-to-text feeds an intent-detecting orchestrator that fans out agents surfacing web answers, pros/cons recommendations, and task plans onto a live dashboard — plus a post-session wiki and speaker diarization. Audio stays local.</p>
+          <div class="proj__stack"><span>Python</span><span>FastAPI</span><span>React</span><span>STT</span><span>Multi-agent</span></div>
+          <a class="proj__link" href="https://github.com/jpliem/deeptalk" target="_blank" rel="noopener" data-magnetic>github.com/jpliem/deeptalk ↗</a>
+        </article>
+
+        <article class="proj panel tilt reveal">
+          <div class="proj__top">
+            <span class="proj__num">02</span>
+            <span class="proj__year">2026</span>
+          </div>
+          <h3 class="proj__title">gunting</h3>
+          <p class="proj__desc">9-agent research-fraud auditor for Claude Code: one paper PDF fans out to parallel specialist auditors and a synthesizer returning a fraud-risk report with per-dimension scores and cited sources. Scored a retracted paper-mill paper <b>90/100 “Likely fraud”</b> vs a genuine IEEE paper 36/100.</p>
+          <div class="proj__stack"><span>Claude Code</span><span>Multi-agent</span><span>Python</span><span>Research integrity</span></div>
+          <a class="proj__link" href="https://github.com/jpliem/gunting" target="_blank" rel="noopener" data-magnetic>github.com/jpliem/gunting ↗</a>
+        </article>
+
+        <article class="proj panel tilt reveal">
+          <div class="proj__top">
+            <span class="proj__num">03</span>
+            <span class="proj__year">2025 — present</span>
+          </div>
+          <h3 class="proj__title">Request Management System</h3>
+          <p class="proj__desc">Production Next.js/Supabase workflow platform in active use across 17+ GSPE systems, with AI-native operations: Claude Code agents handle triage, mockup/spec generation, and request analysis. The backbone of the engineering program.</p>
+          <div class="proj__stack"><span>Next.js</span><span>Supabase</span><span>AI agents</span><span>Internal tooling</span></div>
+          <span class="proj__link proj__link--muted">Private repo — walkthrough on request</span>
+        </article>
+
+        <article class="proj panel tilt reveal">
+          <div class="proj__top">
+            <span class="proj__num">04</span>
+            <span class="proj__year">2026</span>
+          </div>
+          <h3 class="proj__title">PhD Trader</h3>
+          <p class="proj__desc">Hardened paper-trading research system for a multi-model quant strategy: signal processing (Kalman, wavelets), econometrics (cointegration, OU, GARCH), ML meta-labeling, stochastic-calculus option pricing, and OR allocation (Black–Litterman, Avellaneda–Stoikov) behind walk-forward backtests and pre-trade risk gates.</p>
+          <div class="proj__stack"><span>Python</span><span>Quant</span><span>Signal processing</span><span>Econometrics</span></div>
+        </article>
+
+        <article class="proj panel tilt reveal">
+          <div class="proj__top">
+            <span class="proj__num">05</span>
+            <span class="proj__year">2026</span>
+          </div>
+          <h3 class="proj__title">SusSol</h3>
+          <p class="proj__desc">Read-only Solana risk toolkit: transparent rug scanner (mint/freeze authority, LP lock, holder concentration, insider/bundle supply), DLMM honest-yield screener, and a paper-trading bot that empirically showed memecoin trading is −EV.</p>
+          <div class="proj__stack"><span>Next.js</span><span>TypeScript</span><span>Solana</span><span>Risk tooling</span></div>
+        </article>
+
+        <article class="proj panel tilt reveal">
+          <div class="proj__top">
+            <span class="proj__num">06</span>
+            <span class="proj__year">2026</span>
+          </div>
+          <h3 class="proj__title">personal-cv-game</h3>
+          <p class="proj__desc">Interactive 3D voxel world presenting my career as an explorable game. Three.js. The predecessor to the site you’re on now — I rebuilt it as a premium interactive portfolio.</p>
+          <div class="proj__stack"><span>Three.js</span><span>Vite</span><span>WebGL</span></div>
+          <a class="proj__link" href="https://github.com/jpliem/personal-cv-game" target="_blank" rel="noopener" data-magnetic>github.com/jpliem/personal-cv-game ↗</a>
+        </article>
+
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- ============ WRITING / PUBLICATIONS ============ -->
+    <section id="writing" class="section writing" data-section>
+      <div class="section__head reveal">
+        <span class="section__index">05 <i class="section__of">/ 06</i></span>
+        <h2 class="section__title">Writing &amp; Research</h2>
+        <p class="section__sub">Peer-reviewed, and the build write-ups that aren't.</p>
+      </div>
+
+      <div class="writing__grid">
+        <a class="write panel tilt reveal" href="https://ieeexplore.ieee.org/document/9915133" target="_blank" rel="noopener">
+          <div class="write__kind">Peer-reviewed · IEEE</div>
+          <h3>Autonomous Drone Indoor Navigation Based on Virtual 3D Map Reference</h3>
+          <p>A pathfinding system using 3D mapping in Unity that sends real flight commands to a physical drone, with onboard gyroscope feedback for localization. DOI: 10.1109/ICISS55894.2022.9915133</p>
+          <span class="write__cta">Read on IEEE Xplore ↗</span>
+        </a>
+
+        <a class="write panel tilt reveal" href="https://medium.com/generative-ai/the-plan-approve-execute-pattern-for-asynchronous-ai-development-2c1db9fa08b1" target="_blank" rel="noopener">
+          <div class="write__kind">Essay · Medium</div>
+          <h3>Tickets Are All You Need (to make AI agents actually ship)</h3>
+          <p>A Plan-Approve-Execute pattern for governing autonomous AI coding agents inside a legacy enterprise codebase.</p>
+          <span class="write__cta">Read on Medium ↗</span>
+        </a>
+
+        <a class="write panel tilt reveal" href="#">
+          <div class="write__kind">Essay · Medium</div>
+          <h3>AI Paper Mills, a Copenhagen Scandal, and the 9-Agent “Scissors” I Built to Fight Them</h3>
+          <p>The build write-up of <code>gunting</code>, a multi-agent research-fraud auditor.</p>
+          <span class="write__cta">Read on Medium ↗</span>
+        </a>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- ============ BEYOND WORK ============ -->
+    <section id="beyond" class="section beyond" data-section>
+      <div class="section__head reveal">
+        <span class="section__index">06 <i class="section__of">/ 06</i></span>
+        <h2 class="section__title">Beyond work</h2>
+        <p class="section__sub">What keeps the engine running.</p>
+      </div>
+
+      <div class="beyond__feature reveal">
+        <figure class="beyond__photo">
+          <div class="frame frame--wide" data-depth="0.04">
+            <img src="/assets/photo2.png" alt="Jonathan after a weekly 5K run" onerror="this.remove()" />
+          </div>
+          <figcaption>Weekly 5K</figcaption>
+        </figure>
+        <div class="beyond__feature-copy">
+          <h3>A non-negotiable weekly 5K.</h3>
+          <p>
+            I run a 5K every week — it's where strategy problems untangle themselves and the noise
+            falls away. The same discipline carries into how I ship work: steady cadence, measured
+            pace, finish the run.
+          </p>
+        </div>
+      </div>
+
+      <div class="beyond__grid">
+        <div class="hobby reveal"><span class="hobby__k">01</span><h4>Strength</h4><p>Gym, four mornings a week.</p></div>
+        <div class="hobby reveal"><span class="hobby__k">02</span><h4>Padel</h4><p>Competitive, social, addictive.</p></div>
+        <div class="hobby reveal"><span class="hobby__k">03</span><h4>Bouldering</h4><p>currently projecting V3–V4.</p></div>
+        <div class="hobby reveal"><span class="hobby__k">04</span><h4>Badminton</h4><p>singles and doubles.</p></div>
+        <div class="hobby reveal"><span class="hobby__k">05</span><h4>Reading</h4><p>non-fiction and research papers.</p></div>
+        <div class="hobby reveal"><span class="hobby__k">06</span><h4>Building</h4><p>LLM &amp; AI side projects, always.</p></div>
+      </div>
+    </section>
+
+    <!-- ============ SCHOLARSHIP BANNER (dark) ============ -->
+    <section class="banner" aria-label="Seeking a scholarship">
+      <div class="banner__inner">
+        <p class="banner__kicker reveal">Currently</p>
+        <h2 class="banner__title reveal">
+          Seeking a scholarship for a <em>Master's</em> — or a <em>direct-to-PhD</em> by research.
+        </h2>
+        <p class="banner__sub reveal">
+          Research interests at the intersection of AI systems, governance, and applied machine learning.
+          Open to funded programs worldwide.
+        </p>
+        <a href="#contact" class="btn btn--invert reveal" data-magnetic><span>Let's talk</span><i class="btn__arrow">→</i></a>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" class="section contact" data-section>
+      <div class="contact__inner">
+        <p class="eyebrow reveal"><span class="eyebrow__line"></span>Let's talk</p>
+        <h2 class="contact__title">
+          <span class="line"><span class="word">Got a hard</span></span>
+          <span class="line"><span class="word">problem? Let's ship it.</span></span>
+        </h2>
+        <p class="contact__lede reveal">
+          Leading teams, building AI systems, governing risk, or creating products —
+          I’m always looking for the next challenge.
+        </p>
+
+        <div class="contact__actions reveal">
+          <a class="btn btn--primary btn--lg" href="mailto:jonathanputra23@gmail.com" data-magnetic>
+            <span>jonathanputra23@gmail.com</span><i class="btn__arrow">→</i>
+          </a>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <span>© <span id="year"></span> Jonathan Putra</span>
+        <span class="footer__mid">Designed &amp; built from scratch — vanilla JS, no frameworks.</span>
+        <a href="#hero" data-magnetic>Back to top ↑</a>
+      </footer>
+    </section>
+
+  </main>
+
+  <script type="module" src="/src/portfolio.js"></script>
 </body>
 </html>
